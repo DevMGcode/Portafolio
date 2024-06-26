@@ -1,0 +1,153 @@
+/* Estilos específicos para la sección 1 */
+#section1 {
+  background-color: #001d3d; /* Color de fondo */
+  color: #fff; /* Color de texto */
+  padding: 80px 20px;
+  text-align: center;
+  position: relative; /* Agregado para controlar la posición del fondo */
+}
+
+#section1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%; 
+  height: 100%;
+  z-index: -0; 
+  background-image: url('../img/pc2.jpg'); 
+  background-size: cover; 
+  background-position: left; 
+  animation: background-animation 10s infinite linear; 
+  opacity: 0.5; 
+}
+
+#section1 .section-content {
+  animation: slideInLeft 1s ease-out;
+}
+
+#section1 .image-container {
+  animation: slideInRight 1s ease-out;
+  position: relative;
+  overflow: hidden;
+  margin-top: 50px;
+  border-radius: 10px; 
+}
+
+#section1 h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+#section1 p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+#section1 .btn {
+  animation: fadeInUp 1s 1s ease-out forwards;
+  background-color: #3498db;
+  border-color: #3498db;
+  margin-top: 20px;
+}
+
+#section1 .btn:hover {
+  background-color: #2980b9;
+  border-color: #2980b9;
+}
+
+#section1 .image-container img {
+  width: 80%;
+  height: auto;
+  vertical-align: middle;
+  transition: transform 0.8s ease;
+  border-radius: 10px; 
+}
+
+#section1 .image-container:hover img {
+  transform: scale(1.1);
+}
+
+
+
+
+
+#section1 .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  margin: 10px;
+  padding: 20px;
+  font-family: "Playwrite NG Modern", cursive;
+  font-optical-sizing: auto;
+  font-weight: 200px;
+  font-style: normal;
+}
+
+#section1 .overlay:hover {
+  opacity: 1;
+  
+}
+
+#section1 .overlay-content {
+  text-align: center;
+}
+
+/* Animaciones */
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h2 {
+  font-size: 32px;
+  margin-bottom: 50px;
+  font-family: 'Roboto';
+  text-align: justify;
+}
+
+.highlight {
+  color: #8ecae6; 
+}
+
+.texto1 {
+  text-align: justify;
+}

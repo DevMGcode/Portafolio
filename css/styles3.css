@@ -1,0 +1,93 @@
+/* Estilos para la sección 3 - Contacto */
+#section3 {
+  background: linear-gradient(to bottom, #358bad, #001d3d); 
+  color: #fff; 
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.contact-heading {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+  perspective: 1000px; 
+}
+
+.contact-heading span {
+  display: inline-block;
+  position: relative;
+  transition: transform 0.3s ease-out;
+}
+
+.contact-heading span::before,
+.contact-heading span::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #3498db; 
+  transform-origin: center;
+  transition: transform 0.3s ease-out;
+}
+
+.contact-heading span::before {
+  transform: translate3d(5px, 5px, -10px); 
+}
+
+.contact-heading span::after {
+  transform: translate3d(-5px, -5px, -10px);
+}
+
+.contact-heading:hover span {
+  transform: translate3d(0, 0, 20px);
+}
+
+.contact-heading:hover span::before {
+  transform: translate3d(5px, 5px, 0); 
+}
+
+.contact-heading:hover span::after {
+  transform: translate3d(-5px, -5px, 0); 
+}
+
+.contact-icons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.contact-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  transition: transform 0.3s, background 0.3s;
+  width: 300px;
+  text-align: center;
+}
+
+.contact-card:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.contact-icon {
+  color: #fff;
+  font-size: 10rem;
+  margin-bottom: 10px;
+}
+
+.contact-details {
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #1f78b4;
+}
