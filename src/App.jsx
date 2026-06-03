@@ -9,6 +9,7 @@ import HelpPanel from './components/HelpPanel'
 import AboutMePanel from './components/AboutMePanel'
 import LoadingIntro from './components/LoadingIntro'
 import SceneLabel from './components/SceneLabel'
+import AssetsProgress from './components/AssetsProgress'
 import { assetPath } from './utils/assetPath'
 import './App.css'
 
@@ -62,6 +63,8 @@ export default function App() {
   const [aboutMeOpen, setAboutMeOpen] = useState(false)
   const [introVisible, setIntroVisible] = useState(true)
   const [tourIndex, setTourIndex] = useState(0)
+  const [assetProgress, setAssetProgress] = useState(0)
+  const [assetsReady, setAssetsReady] = useState(false)
   // Modo edición solo disponible cuando se corre con `npm run dev` (Vite local).
   // En producción (GitHub Pages, Vercel, etc.) queda completamente oculto.
   const editingAllowed = import.meta.env.DEV
@@ -310,6 +313,10 @@ export default function App() {
         <color attach="background" args={['#05060f']} />
         <fog attach="fog" args={['#05060f', 10, 30]} />
         <Suspense fallback={null}>
+          <AssetsProgress
+            onProgress={setAssetProgress}
+            onReady={() => setAssetsReady(true)}
+          />
           <Scene
             onSelectProject={setSelectedProject}
             onOpenAboutMe={() => setAboutMeOpen(true)}
@@ -366,9 +373,11 @@ export default function App() {
       {/* Scene labels durante el recorrido (Netflix style) */}
       <SceneLabel tourIndex={tourIndex} active={cameraMode === 'tour'} />
 
-      {/* Loading intro cyberpunk (primera carga) */}
+      {/* Loading intro cyberpunk (espera a que carguen los assets 3D) */}
       {introVisible && (
         <LoadingIntro
+          assetProgress={assetProgress}
+          assetsReady={assetsReady}
           onFinish={() => {
             setIntroVisible(false)
             // Abrir el panel de ayuda automáticamente para que el visitante sepa cómo navegar

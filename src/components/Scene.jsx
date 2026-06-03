@@ -49,7 +49,7 @@ export const INITIAL_LAYOUT = {
   wave_floor      : { kind: 'sound', pos: [-4.44, 0.04, 4.77], colorA: '#ff00ff', colorB: '#00ffff', maxRadius: 2, speed: 0.55, count: 3, emitTowards: 'floor' },
   equalizer       : { kind: 'eq', pos: [-4.25, 2.23, 4.44], rot: [0, -0.6, 0], bars: 12, width: 0.52, height: 0.19, colorLow: '#00ffff', colorHigh: '#ff00ff', speed: 2.8 },
   live_metrics    : { kind: 'dashboard', pos: [-0.77, 2.28, -0.35], rot: [0, 0.352, 0], size: 1 },
-  tech_stack      : { kind: 'techstack', pos: [5.87, 2.69, -1.92], rot: [0, -1.5707, 0], size: 1 },
+  tech_stack      : { kind: 'techstack', pos: [5.87, 2.69, -1.93], rot: [0, -1.5707, 0], size: 1 },
   avatar          : { url: '/models/Avatar.glb', pivot: 'base', pos: [1.58, 0.02, 1.85], size: 3, rot: [-3.1, 0.896, -3.127] },
   taza_cafe       : { url: '/models/tazadecafe.glb', pivot: 'base', pos: [1.64, 1.55, 0.17], size: 0.37, rot: [0, 0, 0] },
   taza_efectos    : { kind: 'prop', type: 'mugsteam', pos: [1.58, 1.44, 0.16], rot: [0, 0, 0], size: 1.98, accentColor: '#ff66cc' },

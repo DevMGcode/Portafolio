@@ -18,10 +18,10 @@ const LINES = [
   { text: '> WELCOME, VISITOR.', delay: 3700, color: '#ff44aa' },
 ]
 
-const TOTAL_DURATION = 4800           // ms hasta el fade out
+const MIN_DURATION = 4200             // intro mínimo de 4.2s (para que se aprecie)
 const FADE_DURATION = 800              // ms del fade out
 
-export default function LoadingIntro({ onFinish }) {
+export default function LoadingIntro({ onFinish, assetProgress = 0, assetsReady = false }) {
   const [visibleLines, setVisibleLines] = useState([])
   const [progress, setProgress] = useState(0)
   const [fading, setFading] = useState(false)
@@ -46,30 +46,38 @@ export default function LoadingIntro({ onFinish }) {
       }, line.delay),
     )
 
-    // Animar la progress bar (0 a 100% durante toda la intro)
+    // Animar la progress bar combinando tiempo + progreso real de assets
     const progressInterval = setInterval(() => {
       const elapsed = performance.now() - startTime.current
-      const p = Math.min(100, (elapsed / (TOTAL_DURATION - 200)) * 100)
-      setProgress(p)
+      const timeProgress = Math.min(100, (elapsed / MIN_DURATION) * 100)
+      // El progreso visible es el MENOR entre tiempo y assets reales
+      // (para que no diga 100% si los assets aún no cargaron)
+      setProgress(timeProgress)
     }, 30)
-
-    // Iniciar fade out
-    const fadeTimer = setTimeout(() => {
-      setFading(true)
-    }, TOTAL_DURATION)
-
-    // Llamar a onFinish después del fade
-    const finishTimer = setTimeout(() => {
-      onFinishRef.current?.()
-    }, TOTAL_DURATION + FADE_DURATION)
 
     return () => {
       lineTimers.forEach(clearTimeout)
       clearInterval(progressInterval)
-      clearTimeout(fadeTimer)
-      clearTimeout(finishTimer)
     }
   }, [])    // ← deps vacías: solo se ejecuta UNA vez al montar
+
+  // Dismiss la intro cuando: tiempo mínimo cumplido + assets cargados
+  useEffect(() => {
+    const elapsed = performance.now() - startTime.current
+    const timeOk = elapsed >= MIN_DURATION
+    if (timeOk && assetsReady && !fading) {
+      setFading(true)
+      setTimeout(() => onFinishRef.current?.(), FADE_DURATION)
+    } else if (!timeOk && assetsReady) {
+      // Si los assets ya están pero falta tiempo, programar el dismiss
+      const remaining = MIN_DURATION - elapsed
+      const t = setTimeout(() => {
+        setFading(true)
+        setTimeout(() => onFinishRef.current?.(), FADE_DURATION)
+      }, remaining)
+      return () => clearTimeout(t)
+    }
+  }, [assetsReady, fading])
 
   // Click para saltar
   const handleClick = () => {
@@ -116,19 +124,28 @@ export default function LoadingIntro({ onFinish }) {
           ))}
         </div>
 
-        {/* Progress bar */}
+        {/* Progress bar — muestra el progreso real combinado de tiempo + assets */}
         <div className="intro-progress-wrap">
           <div className="intro-progress-label">
-            <span>LOADING</span>
-            <span>{Math.floor(progress)}%</span>
+            <span>LOADING ASSETS</span>
+            <span>
+              {assetsReady ? '100' : Math.floor(Math.min(progress, assetProgress || progress))}%
+            </span>
           </div>
           <div className="intro-progress-bar">
-            <div className="intro-progress-fill" style={{ width: `${progress}%` }} />
+            <div
+              className="intro-progress-fill"
+              style={{
+                width: `${assetsReady ? 100 : Math.min(progress, Math.max(assetProgress, progress * 0.6))}%`,
+              }}
+            />
           </div>
         </div>
 
         {/* Skip hint */}
-        <div className="intro-skip">click anywhere to skip</div>
+        <div className="intro-skip">
+          {assetsReady ? 'click anywhere to skip' : 'preparando experiencia 3D...'}
+        </div>
       </div>
     </div>
   )
