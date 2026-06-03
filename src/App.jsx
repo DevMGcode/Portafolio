@@ -9,6 +9,7 @@ import HelpPanel from './components/HelpPanel'
 import AboutMePanel from './components/AboutMePanel'
 import LoadingIntro from './components/LoadingIntro'
 import SceneLabel from './components/SceneLabel'
+import { assetPath } from './utils/assetPath'
 import './App.css'
 
 const STORAGE_KEY = 'devoffice-3d-layout-v1'
@@ -89,7 +90,7 @@ export default function App() {
   }, [layout, editingAllowed])
 
   useEffect(() => {
-    const audio = new Audio('/boosted.mp3')
+    const audio = new Audio(assetPath('/boosted.mp3'))
     audio.preload = 'auto'
 
     const context = new AudioContext()

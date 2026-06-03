@@ -54,9 +54,9 @@ function layoutWriterPlugin() {
 }
 
 // Para GitHub Pages: el sitio se sirve desde /Portafolio/ (nombre del repo).
-const isProd = process.env.NODE_ENV === 'production'
-
-export default defineConfig({
-  base: isProd ? '/Portafolio/' : '/',
+// Usamos la función de defineConfig que recibe { command } para detectar dev vs build
+// de forma 100% confiable (sin depender de NODE_ENV).
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/Portafolio/' : '/',
   plugins: [react(), layoutWriterPlugin()],
-})
+}))

@@ -1,6 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 import { useMemo, useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { assetPath } from '../utils/assetPath'
 
 // Genera una geometría tipo "plane curvo" (sección cilíndrica) para pantallas ultrawide.
 // curveAmount = mitad del ángulo total (radianes). 0 = plano.
@@ -41,7 +42,8 @@ function makeCurvedPlaneGeometry(width, height, curveAmount = 0.28, segs = 48) {
  *        'center' = el punto y=0 del group queda al centro (para flotantes)
  */
 export default function Model({ url, targetSize = 1, pivot = 'base', rotation = [0, 0, 0], animatedScreen = false, animatedScreenTransform = null, onScreenMesh = null }) {
-  const { scene } = useGLTF(url)
+  // 🛡️ Prefixea la URL con BASE_URL para que funcione tanto en dev como en GH Pages
+  const { scene } = useGLTF(assetPath(url))
   const animRef = useRef(null)
 
   const object = useMemo(() => {
