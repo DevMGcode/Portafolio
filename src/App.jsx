@@ -391,9 +391,6 @@ export default function App() {
         />
       )}
 
-      <footer className="hud-bottom">
-        <span className="dot dot-cyan" /> Cyberpunk Office · WebGL · React Three Fiber · 💾 Auto-guardado
-      </footer>
     </div>
   )
 }

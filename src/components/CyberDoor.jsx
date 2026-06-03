@@ -50,25 +50,26 @@ export default function CyberDoor() {
     displayCanvasTexture.needsUpdate = true
 
     // === FADE dinámico cuando la cámara está afuera ===
-    // La puerta está en la pared frontal. Si la cámara cruza al otro lado, se vuelve translúcida
+    // La puerta está en la pared frontal. Si la cámara cruza al otro lado, se OCULTA
     // para no tapar la vista del interior. Si vuelve adentro, reaparece.
     if (!rootRef.current) return
     rootRef.current.getWorldPosition(_worldPos.current)
     const doorZ = _worldPos.current.z
     const camZ = state.camera.position.z
-    // Si camera está más allá de la puerta (en +Z) → afuera → fade
+    // Si camera está más allá de la puerta (en +Z) → afuera → fade hasta invisible
     const distOutside = camZ - doorZ
     let targetOpacity = 1
-    if (distOutside > 0.4) targetOpacity = 0.18      // bien afuera: muy translúcida
-    else if (distOutside > 0) targetOpacity = 1 - (distOutside / 0.4) * 0.82
-    // Lerp suave
-    currentOpacity.current += (targetOpacity - currentOpacity.current) * 0.12
+    if (distOutside > 0.2) targetOpacity = 0          // bien afuera: TOTALMENTE invisible
+    else if (distOutside > 0) targetOpacity = 1 - (distOutside / 0.2)
+    // Lerp suave para que la transición sea fluida
+    currentOpacity.current += (targetOpacity - currentOpacity.current) * 0.15
     const op = currentOpacity.current
+    rootRef.current.visible = op > 0.01               // ahorra render cuando es invisible
     rootRef.current.traverse((node) => {
       if (node.isMesh && node.material) {
         node.material.transparent = true
         node.material.opacity = op
-        node.material.depthWrite = op > 0.85
+        node.material.depthWrite = op > 0.95
       }
     })
   })
