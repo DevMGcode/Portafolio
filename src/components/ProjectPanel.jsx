@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { assetPath } from '../utils/assetPath'
 
 export default function ProjectPanel({ project, onClose }) {
   const [hovering, setHovering] = useState(false)
@@ -30,7 +31,7 @@ export default function ProjectPanel({ project, onClose }) {
           onMouseLeave={() => setHovering(false)}
         >
           {project.image && (
-            <img src={project.image} alt={project.name} className="cyber-image" />
+            <img src={assetPath(project.image)} alt={project.name} className="cyber-image" />
           )}
 
           {/* Scanline animado */}
