@@ -65,6 +65,9 @@ export default function App() {
   const [tourIndex, setTourIndex] = useState(0)
   const [assetProgress, setAssetProgress] = useState(0)
   const [assetsReady, setAssetsReady] = useState(false)
+  // Flag: ¿el help se abrió como parte del flujo de bienvenida (post-intro)?
+  // Cuando se cierre por primera vez → arranca el recorrido automáticamente.
+  const [helpFromIntro, setHelpFromIntro] = useState(false)
   // Modo edición solo disponible cuando se corre con `npm run dev` (Vite local).
   // En producción (GitHub Pages, Vercel, etc.) queda completamente oculto.
   const editingAllowed = import.meta.env.DEV
@@ -366,7 +369,19 @@ export default function App() {
         <ProjectPanel project={selectedProject} onClose={() => setSelectedProject(null)} />
       )}
 
-      {helpOpen && <HelpPanel onClose={() => setHelpOpen(false)} />}
+      {helpOpen && (
+        <HelpPanel
+          onClose={() => {
+            setHelpOpen(false)
+            // 🎬 Si el help fue el del flujo post-intro → arrancar recorrido automáticamente
+            if (helpFromIntro) {
+              setHelpFromIntro(false)
+              setTourIndex(0)
+              setCameraMode('tour')
+            }
+          }}
+        />
+      )}
 
       {aboutMeOpen && <AboutMePanel onClose={() => setAboutMeOpen(false)} />}
 
@@ -382,6 +397,8 @@ export default function App() {
             setIntroVisible(false)
             // Abrir el panel de ayuda automáticamente para que el visitante sepa cómo navegar
             setHelpOpen(true)
+            // Marcar que este help es parte del flujo de bienvenida → cuando se cierre arranca tour
+            setHelpFromIntro(true)
             // Intentar arrancar la música (el click-to-skip ya cuenta como gesture)
             try { void startMusicRef.current() } catch {}
           }}

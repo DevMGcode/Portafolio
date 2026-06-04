@@ -197,20 +197,23 @@ function makeQuoteTexture() {
   ctx.moveTo(W - 20 - cornerSize, H - 20); ctx.lineTo(W - 20, H - 20); ctx.lineTo(W - 20, H - 20 - cornerSize)
   ctx.stroke()
 
-  // Tu moto real de GitHub
+  // Tu moto real de GitHub — letra grande, bien visible
   ctx.fillStyle = '#e8f4ff'
-  ctx.font = 'italic 600 32px "Segoe UI"'
+  ctx.font = 'italic 700 56px "Segoe UI"'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.shadowColor = '#00ddff'
-  ctx.shadowBlur = 10
-  ctx.fillText('"Technology with purpose"', W / 2, H / 2 - 25)
+  ctx.shadowBlur = 18
+  ctx.fillText('"Technology with purpose"', W / 2, H / 2 - 32)
   ctx.shadowBlur = 0
 
-  // Subtítulo (segundo moto)
-  ctx.fillStyle = 'rgba(255,102,204,0.9)'
-  ctx.font = '600 18px "Consolas", monospace'
-  ctx.fillText('// Always building and learning', W / 2, H / 2 + 25)
+  // Subtítulo (segundo motto) más grande también
+  ctx.fillStyle = 'rgba(255,102,204,0.95)'
+  ctx.font = '600 28px "Consolas", monospace'
+  ctx.shadowColor = '#ff66cc'
+  ctx.shadowBlur = 8
+  ctx.fillText('// Always building and learning', W / 2, H / 2 + 36)
+  ctx.shadowBlur = 0
 
   return new THREE.CanvasTexture(canvas)
 }
@@ -234,38 +237,41 @@ function makeCertTexture(title, subtitle, color) {
   ctx.fillStyle = color
   ctx.fillRect(6, 6, W - 12, 8)
 
-  // Badge circular
+  // Badge circular más grande
   ctx.fillStyle = color + '22'
   ctx.beginPath()
-  ctx.arc(W / 2, H / 2 - 30, 50, 0, Math.PI * 2)
+  ctx.arc(W / 2, H / 2 - 38, 55, 0, Math.PI * 2)
   ctx.fill()
   ctx.strokeStyle = color
-  ctx.lineWidth = 3
+  ctx.lineWidth = 3.5
   ctx.beginPath()
-  ctx.arc(W / 2, H / 2 - 30, 50, 0, Math.PI * 2)
+  ctx.arc(W / 2, H / 2 - 38, 55, 0, Math.PI * 2)
   ctx.stroke()
-  // Estrella en el badge
+  // Estrella en el badge — más grande
   ctx.fillStyle = color
-  ctx.font = 'bold 50px Segoe UI'
+  ctx.font = 'bold 62px Segoe UI'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.shadowColor = color
-  ctx.shadowBlur = 15
-  ctx.fillText('★', W / 2, H / 2 - 30)
+  ctx.shadowBlur = 18
+  ctx.fillText('★', W / 2, H / 2 - 38)
   ctx.shadowBlur = 0
 
-  // Título
+  // Título mucho más grande
   ctx.fillStyle = '#e8f4ff'
-  ctx.font = 'bold 26px Segoe UI'
+  ctx.font = 'bold 38px Segoe UI'
+  ctx.shadowColor = color
+  ctx.shadowBlur = 8
   ctx.fillText(title, W / 2, H / 2 + 50)
-  // Subtítulo
-  ctx.fillStyle = 'rgba(140,180,220,0.85)'
-  ctx.font = '16px Segoe UI'
-  ctx.fillText(subtitle, W / 2, H / 2 + 80)
+  ctx.shadowBlur = 0
+  // Subtítulo más grande también
+  ctx.fillStyle = 'rgba(180,210,240,0.95)'
+  ctx.font = '600 22px Segoe UI'
+  ctx.fillText(subtitle, W / 2, H / 2 + 88)
 
   // Código serial bottom
   ctx.fillStyle = color + 'AA'
-  ctx.font = '11px Consolas, monospace'
+  ctx.font = 'bold 13px Consolas, monospace'
   ctx.textAlign = 'left'
   ctx.fillText(`ID: ${Math.floor(Math.random() * 99999).toString().padStart(5, '0')}`, 16, H - 18)
   ctx.textAlign = 'right'

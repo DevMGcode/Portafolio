@@ -76,39 +76,92 @@ export default function TechStackWall() {
 
   // Título "TECH STACK" arriba del panel
   const titleTexture = useMemo(() => makeTitleTexture('TECH STACK'), [])
+  // Background con hex grid + scanlines (sutil)
+  const bgTexture = useMemo(() => makeBackgroundTexture(), [])
+  // Status bar inferior
+  const statusTexture = useMemo(() => makeStatusBarTexture(TECHS.length), [])
+
+  // Dimensiones del panel
+  const PANEL_W = 2.95
+  const PANEL_H = 2.15
 
   return (
     <group ref={groupRef}>
-      {/* Panel de fondo (oscuro con detalles tech) — más ancho y alto para acomodar 5x3 */}
+      {/* === MARCO METÁLICO EXTERIOR (gunmetal premium) === */}
+      <mesh position={[0, 0, -0.06]}>
+        <planeGeometry args={[PANEL_W + 0.12, PANEL_H + 0.12]} />
+        <meshStandardMaterial color="#1a1d24" metalness={0.95} roughness={0.25} />
+      </mesh>
+
+      {/* === FONDO DEL PANEL con textura hex grid sutil === */}
       <mesh position={[0, 0, -0.04]}>
-        <planeGeometry args={[2.8, 2.0]} />
+        <planeGeometry args={[PANEL_W, PANEL_H]} />
         <meshStandardMaterial
-          color="#0d1428"
+          map={bgTexture}
+          color="#ffffff"
           emissive="#0a1a2a"
-          emissiveIntensity={0.3}
-          metalness={0.6}
-          roughness={0.5}
+          emissiveIntensity={0.25}
+          metalness={0.4}
+          roughness={0.6}
         />
       </mesh>
 
-      {/* Bordes neón del panel */}
-      <mesh position={[0, 1.02, -0.02]}>
-        <boxGeometry args={[2.8, 0.022, 0.03]} />
-        <meshStandardMaterial color="#00ddff" emissive="#00ddff" emissiveIntensity={1.5} toneMapped={false} />
+      {/* === MARCO INTERNO LED (4 lados) === */}
+      {/* Top cyan */}
+      <mesh position={[0, PANEL_H / 2 - 0.012, -0.02]}>
+        <boxGeometry args={[PANEL_W - 0.02, 0.018, 0.03]} />
+        <meshStandardMaterial color="#00ddff" emissive="#00ddff" emissiveIntensity={1.6} toneMapped={false} />
       </mesh>
-      <mesh position={[0, -1.02, -0.02]}>
-        <boxGeometry args={[2.8, 0.022, 0.03]} />
-        <meshStandardMaterial color="#ff44aa" emissive="#ff44aa" emissiveIntensity={1.5} toneMapped={false} />
+      {/* Bottom magenta */}
+      <mesh position={[0, -PANEL_H / 2 + 0.012, -0.02]}>
+        <boxGeometry args={[PANEL_W - 0.02, 0.018, 0.03]} />
+        <meshStandardMaterial color="#ff44aa" emissive="#ff44aa" emissiveIntensity={1.6} toneMapped={false} />
+      </mesh>
+      {/* Left fade */}
+      <mesh position={[-PANEL_W / 2 + 0.012, 0, -0.02]}>
+        <boxGeometry args={[0.018, PANEL_H - 0.02, 0.03]} />
+        <meshStandardMaterial color="#5a8fb0" emissive="#5a8fb0" emissiveIntensity={0.8} toneMapped={false} />
+      </mesh>
+      {/* Right fade */}
+      <mesh position={[PANEL_W / 2 - 0.012, 0, -0.02]}>
+        <boxGeometry args={[0.018, PANEL_H - 0.02, 0.03]} />
+        <meshStandardMaterial color="#5a8fb0" emissive="#5a8fb0" emissiveIntensity={0.8} toneMapped={false} />
       </mesh>
 
-      {/* Título */}
-      <mesh position={[0, 0.87, 0]}>
-        <planeGeometry args={[1.4, 0.16]} />
+      {/* === CORNER BRACKETS HUD (premium detail) === */}
+      {[
+        [-PANEL_W / 2 + 0.05,  PANEL_H / 2 - 0.05], // TL
+        [ PANEL_W / 2 - 0.05,  PANEL_H / 2 - 0.05], // TR
+        [-PANEL_W / 2 + 0.05, -PANEL_H / 2 + 0.05], // BL
+        [ PANEL_W / 2 - 0.05, -PANEL_H / 2 + 0.05], // BR
+      ].map(([x, y], i) => (
+        <mesh key={i} position={[x, y, 0.005]}>
+          <ringGeometry args={[0.018, 0.024, 24, 1, 0, Math.PI / 2]} />
+          <meshStandardMaterial color="#00ddff" emissive="#00ddff" emissiveIntensity={1.3} toneMapped={false} side={THREE.DoubleSide} />
+        </mesh>
+      ))}
+
+      {/* === TORNILLOS DECORATIVOS (4 esquinas externas) === */}
+      {[
+        [-PANEL_W / 2 - 0.04,  PANEL_H / 2 + 0.04],
+        [ PANEL_W / 2 + 0.04,  PANEL_H / 2 + 0.04],
+        [-PANEL_W / 2 - 0.04, -PANEL_H / 2 - 0.04],
+        [ PANEL_W / 2 + 0.04, -PANEL_H / 2 - 0.04],
+      ].map(([x, y], i) => (
+        <mesh key={i} position={[x, y, -0.03]}>
+          <cylinderGeometry args={[0.022, 0.022, 0.015, 16]} rotation={[Math.PI / 2, 0, 0]} />
+          <meshStandardMaterial color="#4a5060" metalness={1} roughness={0.3} />
+        </mesh>
+      ))}
+
+      {/* === TÍTULO TECH STACK === */}
+      <mesh position={[0, PANEL_H / 2 - 0.16, 0.01]}>
+        <planeGeometry args={[1.7, 0.2]} />
         <meshBasicMaterial map={titleTexture} transparent toneMapped={false} />
       </mesh>
 
-      {/* Placas (offset un poquito hacia abajo para dejar espacio al título) */}
-      <group position={[0, -0.04, 0.01]}>
+      {/* === PLACAS HEXAGONALES === */}
+      <group position={[0, -0.08, 0.01]}>
         {plaques.map(({ tech, x, y, texture }, i) => (
           <group key={i} position={[x, y, 0]}>
             <mesh>
@@ -123,6 +176,12 @@ export default function TechStackWall() {
           </group>
         ))}
       </group>
+
+      {/* === STATUS BAR INFERIOR === */}
+      <mesh position={[0, -PANEL_H / 2 + 0.085, 0.01]}>
+        <planeGeometry args={[PANEL_W - 0.08, 0.1]} />
+        <meshBasicMaterial map={statusTexture} transparent toneMapped={false} />
+      </mesh>
     </group>
   )
 }
@@ -173,43 +232,76 @@ function makePlaqueTexture(tech) {
       ctx.stroke()
     }
 
-    // Nombre del tech
-    ctx.fillStyle = '#e8f4ff'
-    ctx.font = 'bold 22px "Segoe UI"'
+    // Nombre del tech — más grande, con letter-spacing manual cyberpunk
+    ctx.fillStyle = '#ffffff'
+    ctx.font = 'bold 32px "Segoe UI", system-ui'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillText(tech.name.toUpperCase(), cx, cy + 78)
+    ctx.shadowColor = tech.color
+    ctx.shadowBlur = 14
+    // Letter-spacing manual: dibujar letra por letra con gap
+    const name = tech.name.toUpperCase()
+    const letterSpacing = 2
+    const totalTextW = ctx.measureText(name).width + (name.length - 1) * letterSpacing
+    let xPos = cx - totalTextW / 2
+    for (const ch of name) {
+      const w = ctx.measureText(ch).width
+      ctx.fillText(ch, xPos + w / 2, cy + 88)
+      xPos += w + letterSpacing
+    }
+    ctx.shadowBlur = 0
 
-    // Nivel (barritas)
-    const barY = cy + 110
-    const barW = 18
-    const barH = 6
-    const gap = 4
-    const totalW = 5 * barW + 4 * gap
-    const startX = cx - totalW / 2
+    // Línea decorativa debajo del título — HUD style
+    ctx.strokeStyle = tech.color + '60'
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(cx - 50, cy + 108)
+    ctx.lineTo(cx + 50, cy + 108)
+    ctx.stroke()
+    // Acentos en los extremos
+    ctx.fillStyle = tech.color
+    ctx.beginPath()
+    ctx.arc(cx - 50, cy + 108, 2, 0, Math.PI * 2)
+    ctx.arc(cx + 50, cy + 108, 2, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Nivel (barritas) — abajo del separador, más prolijas
+    const barY = cy + 125
+    const barW = 22
+    const barH = 7
+    const gap = 5
+    const totalBarW = 5 * barW + 4 * gap
+    const startX = cx - totalBarW / 2
     for (let i = 0; i < 5; i++) {
       const filled = i < tech.level
-      ctx.fillStyle = filled ? tech.color : 'rgba(80,140,200,0.2)'
-      if (filled) { ctx.shadowColor = tech.color; ctx.shadowBlur = 10 }
+      ctx.fillStyle = filled ? tech.color : 'rgba(80,140,200,0.18)'
+      if (filled) { ctx.shadowColor = tech.color; ctx.shadowBlur = 12 }
       ctx.fillRect(startX + i * (barW + gap), barY, barW, barH)
       ctx.shadowBlur = 0
     }
 
-    // Top corner decorations (HUD)
+    // Top corner decorations (HUD) — más definidas
     ctx.strokeStyle = tech.color
-    ctx.lineWidth = 2
+    ctx.lineWidth = 2.5
     ctx.beginPath()
-    ctx.moveTo(20, 38); ctx.lineTo(20, 20); ctx.lineTo(38, 20)
-    ctx.moveTo(W - 38, 20); ctx.lineTo(W - 20, 20); ctx.lineTo(W - 20, 38)
-    ctx.moveTo(20, H - 38); ctx.lineTo(20, H - 20); ctx.lineTo(38, H - 20)
-    ctx.moveTo(W - 38, H - 20); ctx.lineTo(W - 20, H - 20); ctx.lineTo(W - 20, H - 38)
+    ctx.moveTo(20, 42); ctx.lineTo(20, 20); ctx.lineTo(42, 20)
+    ctx.moveTo(W - 42, 20); ctx.lineTo(W - 20, 20); ctx.lineTo(W - 20, 42)
+    ctx.moveTo(20, H - 42); ctx.lineTo(20, H - 20); ctx.lineTo(42, H - 20)
+    ctx.moveTo(W - 42, H - 20); ctx.lineTo(W - 20, H - 20); ctx.lineTo(W - 20, H - 42)
     ctx.stroke()
 
-    // Código serial top-right
-    ctx.fillStyle = tech.color + 'AA'
-    ctx.font = '10px "Consolas", monospace'
+    // Código serial top-right — más visible
+    ctx.fillStyle = tech.color + 'CC'
+    ctx.font = 'bold 13px "Consolas", monospace'
     ctx.textAlign = 'right'
+    ctx.textBaseline = 'middle'
     ctx.fillText(`v${tech.level}.0`, W - 30, 35)
+
+    // Etiqueta TECH abajo-izquierda
+    ctx.fillStyle = tech.color + '88'
+    ctx.font = 'bold 11px "Consolas", monospace'
+    ctx.textAlign = 'left'
+    ctx.fillText('// TECH', 28, H - 28)
   }
 
   drawBase()
@@ -261,28 +353,220 @@ function drawHexPath(ctx, cx, cy, rx, ry) {
 
 function makeTitleTexture(title) {
   const W = 512
-  const H = 80
+  const H = 96
   const canvas = document.createElement('canvas')
   canvas.width = W
   canvas.height = H
   const ctx = canvas.getContext('2d')
   ctx.clearRect(0, 0, W, H)
-  // Glow
+
+  // Glow grande rosa
   ctx.shadowColor = '#ff44aa'
-  ctx.shadowBlur = 25
+  ctx.shadowBlur = 30
   ctx.fillStyle = '#ff44aa'
-  ctx.font = 'bold 48px "Segoe UI", monospace'
+  ctx.font = 'bold 56px "Segoe UI", system-ui'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(title, W / 2, H / 2)
+
+  // Letter-spacing manual para look HUD
+  const upperTitle = title.toUpperCase()
+  const letterSpacing = 4
+  const totalW = ctx.measureText(upperTitle).width + (upperTitle.length - 1) * letterSpacing
+  let xPos = W / 2 - totalW / 2
+  for (const ch of upperTitle) {
+    const w = ctx.measureText(ch).width
+    ctx.fillText(ch, xPos + w / 2, H / 2 - 8)
+    xPos += w + letterSpacing
+  }
   ctx.shadowBlur = 0
-  // Doble pasada
-  ctx.fillStyle = '#fff'
-  ctx.fillText(title, W / 2, H / 2)
+
+  // Doble pasada con blanco encima para que se lea nítido
+  ctx.fillStyle = '#ffffff'
+  xPos = W / 2 - totalW / 2
+  for (const ch of upperTitle) {
+    const w = ctx.measureText(ch).width
+    ctx.fillText(ch, xPos + w / 2, H / 2 - 8)
+    xPos += w + letterSpacing
+  }
+
+  // Líneas decorativas a los lados del título
+  ctx.strokeStyle = '#00ddff'
+  ctx.lineWidth = 2
+  const yLine = H / 2 - 8
+  ctx.beginPath()
+  ctx.moveTo(40, yLine); ctx.lineTo(110, yLine)
+  ctx.moveTo(W - 110, yLine); ctx.lineTo(W - 40, yLine)
+  ctx.stroke()
+
   // Subtítulo
-  ctx.fillStyle = 'rgba(140,180,220,0.8)'
-  ctx.font = '12px "Consolas", monospace'
-  ctx.fillText('· STACK SKILL TREE ·', W / 2, H - 12)
+  ctx.fillStyle = 'rgba(0, 221, 255, 0.9)'
+  ctx.font = 'bold 14px "Consolas", monospace'
+  ctx.shadowColor = '#00ddff'
+  ctx.shadowBlur = 8
+  ctx.fillText('◇ STACK · SKILL · TREE ◇', W / 2, H - 18)
+  ctx.shadowBlur = 0
+
+  const tex = new THREE.CanvasTexture(canvas)
+  tex.colorSpace = THREE.SRGBColorSpace
+  return tex
+}
+
+// ============================================================
+// FONDO DEL PANEL — Hex grid + scanlines premium
+// ============================================================
+function makeBackgroundTexture() {
+  const size = 1024
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d')
+
+  // Base: gradiente vertical oscuro
+  const bg = ctx.createLinearGradient(0, 0, 0, size)
+  bg.addColorStop(0, '#0a1228')
+  bg.addColorStop(0.5, '#0d162e')
+  bg.addColorStop(1, '#0a0e22')
+  ctx.fillStyle = bg
+  ctx.fillRect(0, 0, size, size)
+
+  // Hex grid sutil
+  const hexSize = 38
+  const hexW = hexSize * 2
+  const hexH = hexSize * Math.sqrt(3)
+  ctx.strokeStyle = 'rgba(0,221,255,0.07)'
+  ctx.lineWidth = 1
+  for (let row = -1; row < size / hexH + 2; row++) {
+    for (let col = -1; col < size / (hexW * 0.75) + 2; col++) {
+      const x = col * hexW * 0.75
+      const y = row * hexH + (col % 2) * (hexH / 2)
+      ctx.beginPath()
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i
+        const px = x + (hexSize - 3) * Math.cos(angle)
+        const py = y + (hexSize - 3) * Math.sin(angle)
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py)
+      }
+      ctx.closePath()
+      ctx.stroke()
+    }
+  }
+
+  // Glow radial central (vibe foco)
+  const radial = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 1.5)
+  radial.addColorStop(0, 'rgba(0,150,220,0.12)')
+  radial.addColorStop(1, 'rgba(0,0,0,0)')
+  ctx.fillStyle = radial
+  ctx.fillRect(0, 0, size, size)
+
+  // Scanlines horizontales sutiles
+  for (let y = 0; y < size; y += 3) {
+    ctx.fillStyle = `rgba(0,200,255,0.025)`
+    ctx.fillRect(0, y, size, 1)
+  }
+
+  // Circuit traces decorativos
+  ctx.strokeStyle = 'rgba(255,68,170,0.15)'
+  ctx.lineWidth = 1.5
+  ctx.beginPath()
+  ctx.moveTo(80, 100); ctx.lineTo(80, 200); ctx.lineTo(180, 200)
+  ctx.moveTo(size - 80, size - 100); ctx.lineTo(size - 80, size - 200); ctx.lineTo(size - 180, size - 200)
+  ctx.stroke()
+  // Puntos al final de los traces
+  ctx.fillStyle = 'rgba(255,68,170,0.5)'
+  ctx.beginPath(); ctx.arc(180, 200, 3, 0, Math.PI * 2); ctx.fill()
+  ctx.beginPath(); ctx.arc(size - 180, size - 200, 3, 0, Math.PI * 2); ctx.fill()
+
+  // Códigos seriales esquinas (tipografía tech)
+  ctx.fillStyle = 'rgba(0,221,255,0.4)'
+  ctx.font = 'bold 14px "Consolas", monospace'
+  ctx.fillText('SEC-TECH-001', 30, 30)
+  ctx.textAlign = 'right'
+  ctx.fillText('ONLINE · 100%', size - 30, 30)
+  ctx.textAlign = 'left'
+  ctx.fillText('// MELISSA-G', 30, size - 20)
+  ctx.textAlign = 'right'
+  ctx.fillText('v3.0.0', size - 30, size - 20)
+
+  const tex = new THREE.CanvasTexture(canvas)
+  tex.wrapS = THREE.RepeatWrapping
+  tex.wrapT = THREE.RepeatWrapping
+  tex.colorSpace = THREE.SRGBColorSpace
+  return tex
+}
+
+// ============================================================
+// STATUS BAR INFERIOR — Premium HUD bar
+// ============================================================
+function makeStatusBarTexture(totalTechs) {
+  const W = 1024
+  const H = 96
+  const canvas = document.createElement('canvas')
+  canvas.width = W
+  canvas.height = H
+  const ctx = canvas.getContext('2d')
+
+  // Fondo translúcido oscuro
+  ctx.fillStyle = 'rgba(8,12,28,0.85)'
+  ctx.fillRect(0, 0, W, H)
+  // Borde superior cyan
+  ctx.fillStyle = 'rgba(0,221,255,0.5)'
+  ctx.fillRect(0, 0, W, 2)
+
+  // === Stats lado izquierdo ===
+  const padX = 28
+  const y = H / 2
+
+  // Punto verde "ACTIVE"
+  ctx.fillStyle = '#00ff88'
+  ctx.shadowColor = '#00ff88'
+  ctx.shadowBlur = 12
+  ctx.beginPath(); ctx.arc(padX, y, 6, 0, Math.PI * 2); ctx.fill()
+  ctx.shadowBlur = 0
+
+  ctx.fillStyle = '#00ff88'
+  ctx.font = 'bold 18px "Consolas", monospace'
+  ctx.textAlign = 'left'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('SYSTEM ACTIVE', padX + 18, y)
+
+  // Separador
+  ctx.strokeStyle = 'rgba(140,180,220,0.3)'
+  ctx.lineWidth = 1
+  ctx.beginPath(); ctx.moveTo(padX + 195, y - 20); ctx.lineTo(padX + 195, y + 20); ctx.stroke()
+
+  // Stack loaded
+  ctx.fillStyle = '#00ddff'
+  ctx.font = 'bold 18px "Consolas", monospace'
+  ctx.fillText('STACK:', padX + 215, y)
+  ctx.fillStyle = '#ffffff'
+  ctx.fillText(`${totalTechs}/${totalTechs}`, padX + 295, y)
+  ctx.fillStyle = 'rgba(140,180,220,0.7)'
+  ctx.font = '14px "Consolas", monospace'
+  ctx.fillText('TECHS', padX + 345, y)
+
+  // === Stats lado derecho ===
+  ctx.fillStyle = '#ff66cc'
+  ctx.font = 'bold 18px "Consolas", monospace'
+  ctx.textAlign = 'right'
+  ctx.fillText('SKILL_LEVEL:', W - padX - 100, y)
+  ctx.fillStyle = '#ffffff'
+  ctx.fillText('EXPERT', W - padX - 20, y)
+
+  // Pequeños indicators a la derecha (3 LEDs)
+  const ledY = y
+  const ledStart = W - padX - 230
+  ;['#00ff88', '#00ddff', '#ff66cc'].forEach((color, i) => {
+    ctx.fillStyle = color
+    ctx.shadowColor = color
+    ctx.shadowBlur = 10
+    ctx.beginPath(); ctx.arc(ledStart + i * 16, ledY, 4, 0, Math.PI * 2); ctx.fill()
+    ctx.shadowBlur = 0
+  })
+
+  // Borde inferior magenta
+  ctx.fillStyle = 'rgba(255,68,170,0.4)'
+  ctx.fillRect(0, H - 1, W, 1)
+
   const tex = new THREE.CanvasTexture(canvas)
   tex.colorSpace = THREE.SRGBColorSpace
   return tex

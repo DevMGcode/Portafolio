@@ -39,12 +39,13 @@ const TOUR_POINTS = [
     target: [1.58, 2.15, 1.85],
     hold: 3.2,
   },
-  // 2. VISTA GENERAL — Establece el espacio donde vive
+  // 2. VISTA GENERAL — Plano amplio mostrando TODO (Tech Stack, Letrero, Puerta, Wall Display)
+  // Cámara dentro del cuarto, lado frontal-izquierdo, elevada, mirando hacia el setup
   {
     label: 'Welcome to DevOffice 3D',
-    position: [7.5, 5.2, 7.5],
-    target: [0, 2, -1],
-    hold: 2.5,
+    position: [-2.5, 3.6, 3.8],
+    target: [2.2, 1.8, -1],
+    hold: 3.5,
   },
   // 3. VENTANA CYBERPUNK — El mundo donde vive (atmósfera)
   {
