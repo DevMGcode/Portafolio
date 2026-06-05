@@ -1689,3 +1689,243 @@ canvas { display: block; }
 .aboutme-modal::-webkit-scrollbar-track {
   background: rgba(15, 25, 45, 0.5);
 }
+
+/* ============================================================
+   ERROR BOUNDARY — Fallback amigable si algo falla
+   ============================================================ */
+.error-boundary {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #05060f 0%, #0a0e1f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #e8f4ff;
+  overflow-y: auto;
+}
+.error-content {
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  background: rgba(15, 20, 45, 0.85);
+  border: 1px solid rgba(0, 221, 255, 0.35);
+  border-radius: 4px;
+  padding: 30px 28px;
+  box-shadow: 0 0 50px rgba(0, 221, 255, 0.2);
+}
+.error-logo {
+  font-family: 'Consolas', monospace;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+.error-bracket { color: #ff44aa; }
+.error-text {
+  background: linear-gradient(90deg, #00ddff 0%, #ff44aa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.error-title {
+  font-family: 'Consolas', monospace;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: #00ddff;
+  margin: 8px 0 18px;
+  text-shadow: 0 0 12px rgba(0, 221, 255, 0.6);
+}
+.error-message {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #e8f4ff;
+  margin: 0 0 10px;
+}
+.error-hint {
+  font-size: 13px;
+  color: rgba(140, 180, 220, 0.8);
+  margin: 0 0 22px;
+}
+.error-contact {
+  border-top: 1px solid rgba(80, 140, 200, 0.18);
+  padding-top: 18px;
+  margin-bottom: 18px;
+}
+.error-contact p {
+  font-size: 13px;
+  color: rgba(140, 180, 220, 0.85);
+  margin: 0 0 12px;
+}
+.error-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.error-link {
+  flex: 1;
+  min-width: 110px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid;
+  border-radius: 3px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.error-link-wsp  { border-color: #25d366; color: #25d366; }
+.error-link-gh   { border-color: #ffffff; color: #ffffff; }
+.error-link-mail { border-color: #ff44aa; color: #ff44aa; }
+.error-link:hover { background: currentColor; color: #05060f !important; }
+.error-reload {
+  background: transparent;
+  border: 1px solid #00ddff;
+  color: #00ddff;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.error-reload:hover {
+  background: #00ddff;
+  color: #05060f;
+  box-shadow: 0 0 15px #00ddff;
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE breakpoints
+   ============================================================ */
+
+/* Tablet (≤ 900px) */
+@media (max-width: 900px) {
+  .hud h1 { font-size: 16px; }
+  .hud p { font-size: 11px; }
+
+  .top-right-controls {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+  .pill {
+    font-size: 11px !important;
+    padding: 6px 10px !important;
+  }
+}
+
+/* Mobile (≤ 700px) */
+@media (max-width: 700px) {
+  .app.is-mobile .hud {
+    top: 8px;
+    left: 10px;
+  }
+  .hud h1 {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  .hud p {
+    font-size: 10px;
+    margin-top: 2px;
+  }
+
+  /* Top right buttons */
+  .top-right-controls {
+    top: 6px !important;
+    right: 6px !important;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px !important;
+    max-width: 50vw;
+  }
+  .camera-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    max-width: 100%;
+  }
+  .pill {
+    font-size: 10px !important;
+    padding: 5px 8px !important;
+    letter-spacing: 0;
+  }
+  .pill-icon { font-size: 11px; }
+  .zoom-controls { gap: 3px; }
+
+  /* Bottom HUD oculto en mobile */
+  .hud-bottom { display: none; }
+
+  /* Scene label más chico en mobile */
+  .scene-label {
+    bottom: 12px !important;
+    padding: 8px 14px !important;
+    max-width: 90vw;
+  }
+  .scene-label-title { font-size: 16px !important; }
+  .scene-counter { font-size: 9px !important; }
+
+  /* Loading intro adaptable */
+  .intro-logo {
+    font-size: 22px;
+    letter-spacing: 3px;
+  }
+  .intro-subtitle { font-size: 10px; }
+  .intro-terminal {
+    font-size: 11px;
+    padding: 14px 16px;
+    min-height: 130px;
+  }
+  .intro-line { font-size: 11px; }
+  .intro-progress-label { font-size: 9px; }
+  .intro-skip { font-size: 9px; }
+
+  /* Modales ajustados a pantalla chica */
+  .aboutme-modal,
+  .cyber-panel,
+  .panel {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    max-height: 92vh !important;
+    padding: 18px 18px !important;
+  }
+  .aboutme-grid { grid-template-columns: 1fr !important; }
+  .aboutme-name { font-size: 24px !important; }
+  .aboutme-name-sub { font-size: 11px !important; }
+  .aboutme-role { font-size: 12px !important; }
+  .aboutme-h3 { font-size: 11px !important; }
+  .aboutme-text { font-size: 12px !important; line-height: 1.5 !important; }
+  .aboutme-list { font-size: 11px !important; line-height: 1.6 !important; }
+  .tag {
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+  }
+  .aboutme-links { flex-direction: column; gap: 6px; }
+  .aboutme-link { min-width: auto !important; }
+
+  /* Project panel */
+  .cyber-image-wrap {
+    height: 36vh !important;
+    max-height: 280px !important;
+  }
+  .cyber-titlebar { font-size: 10px; padding: 6px 10px; }
+
+  /* Help panel — ya tiene su responsive en su CSS */
+  .help-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Pantalla muy chica (≤ 420px) */
+@media (max-width: 420px) {
+  .hud h1 { font-size: 12px; }
+  .hud p { display: none; }
+  .pill { font-size: 9px !important; padding: 4px 6px !important; }
+  .pill-icon { display: none; }
+  .scene-label-title { font-size: 14px !important; }
+  .intro-logo { font-size: 18px; }
+}
+
+/* Modo mobile específico — oculta cosas que no aplican en touch */
+.app.is-mobile .editor-panel { display: none !important; }

@@ -15,6 +15,7 @@ import DustParticles from './DustParticles'
 import LampLight from './LampLight'
 import MugSteam from './MugSteam'
 import { makeFloorTexture } from './textures'
+import { isMobile } from '../utils/device'
 import { PROJECTS } from '../data/projects'
 
 // __LAYOUT_START__
@@ -59,6 +60,8 @@ export const INITIAL_LAYOUT = {
 }
 // __LAYOUT_END__
 
+const IS_MOBILE = isMobile()
+
 export default function Scene({ onSelectProject, onOpenAboutMe, editMode, selectedItem, onSelectItem, layout, onUpdateLayout, gizmoMode, cameraMode, onCameraMode, onTourIndex }) {
   const controlsRef = useRef()
   const floorTexture = useMemo(() => makeFloorTexture(), [])
@@ -76,30 +79,41 @@ export default function Scene({ onSelectProject, onOpenAboutMe, editMode, select
       {/* Humo cyberpunk sutil flotando en el techo (atmósfera) */}
       <CeilingClouds count={6} ceilingY={5.6} roomSize={10} />
 
-      {/* Partículas de polvo cinemáticas (dust motes con drift) */}
-      <DustParticles count={90} roomSize={11} roomHeight={5.5} />
+      {/* Partículas de polvo cinemáticas — menos en mobile para no lagear */}
+      <DustParticles count={IS_MOBILE ? 30 : 90} roomSize={11} roomHeight={5.5} />
 
       {/* Luz LED real saliendo de la lámpara de techo */}
       {layout.lampara_techo && <LampLight position={layout.lampara_techo.pos} />}
 
 
-      {/* Piso con reflejos MUY sutiles cyberpunk — hex + ~20% reflexión borrosa */}
+      {/* Piso — con reflejos en desktop, mate en mobile (mucho más liviano) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]}>
         <planeGeometry args={[12, 12]} />
-        <MeshReflectorMaterial
-          map={floorTexture}
-          color="#ffffff"
-          mirror={0}
-          mixStrength={0.22}
-          mixBlur={6}
-          blur={[600, 300]}
-          resolution={256}
-          depthScale={0.5}
-          minDepthThreshold={0.9}
-          maxDepthThreshold={1}
-          roughness={0.85}
-          metalness={0.2}
-        />
+        {IS_MOBILE ? (
+          <meshStandardMaterial
+            map={floorTexture}
+            color="#ffffff"
+            emissive="#0d1830"
+            emissiveIntensity={0.6}
+            metalness={0.1}
+            roughness={0.95}
+          />
+        ) : (
+          <MeshReflectorMaterial
+            map={floorTexture}
+            color="#ffffff"
+            mirror={0}
+            mixStrength={0.22}
+            mixBlur={6}
+            blur={[600, 300]}
+            resolution={256}
+            depthScale={0.5}
+            minDepthThreshold={0.9}
+            maxDepthThreshold={1}
+            roughness={0.85}
+            metalness={0.2}
+          />
+        )}
       </mesh>
       {/* Piso exterior muy oscuro (por si la cámara ve afuera del cuarto) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>

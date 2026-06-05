@@ -10,7 +10,9 @@ import AboutMePanel from './components/AboutMePanel'
 import LoadingIntro from './components/LoadingIntro'
 import SceneLabel from './components/SceneLabel'
 import AssetsProgress from './components/AssetsProgress'
+import ErrorBoundary from './components/ErrorBoundary'
 import { assetPath } from './utils/assetPath'
+import { isMobile, deviceQuality } from './utils/device'
 import './App.css'
 
 const STORAGE_KEY = 'devoffice-3d-layout-v1'
@@ -51,6 +53,10 @@ function loadSavedLayout() {
     return fallback
   }
 }
+
+// Detecciones de device (se calcula 1 vez al cargar)
+const IS_MOBILE = isMobile()
+const QUALITY = deviceQuality()
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState(null)
@@ -244,7 +250,8 @@ export default function App() {
   }, [editingAllowed, editMode, selectedItem, handleDeleteItem])
 
   return (
-    <div className="app">
+    <ErrorBoundary>
+    <div className={`app ${IS_MOBILE ? 'is-mobile' : 'is-desktop'} quality-${QUALITY}`}>
       <header className="hud">
         <h1>DevOffice 3D <span className="neon">// Melissa García</span></h1>
         <p>
@@ -309,9 +316,19 @@ export default function App() {
       </div>
 
       <Canvas
-        shadows
+        shadows={!IS_MOBILE}
         camera={{ position: [6, 4.5, 7], fov: 55 }}
-        gl={{ antialias: true }}
+        gl={{
+          antialias: !IS_MOBILE,
+          powerPreference: IS_MOBILE ? 'low-power' : 'high-performance',
+          alpha: false,
+          stencil: false,
+        }}
+        dpr={IS_MOBILE ? [1, 1.5] : [1, 2]}
+        onCreated={({ gl }) => {
+          // Limpio fondo por si el Canvas no se vuelve a renderizar (fallback visual)
+          gl.setClearColor('#05060f')
+        }}
       >
         <color attach="background" args={['#05060f']} />
         <fog attach="fog" args={['#05060f', 10, 30]} />
@@ -336,8 +353,8 @@ export default function App() {
             onTourIndex={setTourIndex}
           />
 
-          {/* POST-PROCESSING — Look cinemático MUY tenue (mínimo viable) */}
-          {!editMode && (
+          {/* POST-PROCESSING — Solo en desktop. Mobile salta los efectos para no lagear */}
+          {!editMode && !IS_MOBILE && (
             <EffectComposer multisampling={4}>
               {/* Bloom — apenas un brillito en los neones más fuertes */}
               <Bloom
@@ -405,7 +422,7 @@ export default function App() {
         />
       )}
 
-      {editMode && editingAllowed && (
+      {editMode && editingAllowed && !IS_MOBILE && (
         <EditorPanel
           layout={layout}
           selectedItem={selectedItem}
@@ -418,5 +435,6 @@ export default function App() {
       )}
 
     </div>
+    </ErrorBoundary>
   )
 }
