@@ -20,6 +20,10 @@ export default class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      // Si nos pasaron un UI alternativo (ej. MobileFallback), lo usamos como recovery elegante
+      if (this.props.fallbackUI) {
+        return this.props.fallbackUI
+      }
       return (
         <div className="error-boundary">
           <div className="error-content">

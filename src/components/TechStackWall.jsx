@@ -27,7 +27,7 @@ const TECHS = [
   { name: 'React',      iconUrl: DEVICON('react'),                       color: '#61dafb', level: 5 },
   { name: 'Next.js',    iconUrl: DEVICON('nextjs', 'original-wordmark'), color: '#ffffff', level: 4 },
   { name: 'Angular',    iconUrl: DEVICON('angularjs'),                   color: '#dd0031', level: 4 },
-  { name: 'Tailwind',   iconUrl: DEVICON('tailwindcss', 'plain'),        color: '#06b6d4', level: 5 },
+  { name: 'Tailwind',   iconUrl: DEVICON('tailwindcss', 'original'),     color: '#06b6d4', level: 5 },
   { name: 'Bootstrap',  iconUrl: DEVICON('bootstrap'),                   color: '#7952b3', level: 5 },
   // Fila 3 — Backend + tools
   { name: 'Node.js',    iconUrl: DEVICON('nodejs'),  color: '#7cc242', level: 4 },

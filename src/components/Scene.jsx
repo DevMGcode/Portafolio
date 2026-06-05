@@ -67,20 +67,21 @@ export default function Scene({ onSelectProject, onOpenAboutMe, editMode, select
   const floorTexture = useMemo(() => makeFloorTexture(), [])
   return (
     <>
-      <ambientLight intensity={0.42} />
+      <ambientLight intensity={IS_MOBILE ? 0.6 : 0.42} />
       <pointLight position={[3, 4, 3]} intensity={12} color="#00ffff" distance={14} />
       <pointLight position={[-3, 4, -2]} intensity={10} color="#ff00ff" distance={14} />
-      <spotLight position={[0, 5.5, 2]} angle={0.65} penumbra={0.75} intensity={11} color="#fff4dd" castShadow />
-      <pointLight position={[0, 5.7, 0]} intensity={2.4} color="#7fd9ff" distance={10} />
+      {/* Solo en desktop: spotlight con sombras (costoso) y luces extra */}
+      {!IS_MOBILE && <spotLight position={[0, 5.5, 2]} angle={0.65} penumbra={0.75} intensity={11} color="#fff4dd" castShadow />}
+      {!IS_MOBILE && <pointLight position={[0, 5.7, 0]} intensity={2.4} color="#7fd9ff" distance={10} />}
 
       {/* HABITACIÓN: paredes, techo, ventana, alfombra */}
       <Room />
 
-      {/* Humo cyberpunk sutil flotando en el techo (atmósfera) */}
-      <CeilingClouds count={6} ceilingY={5.6} roomSize={10} />
+      {/* Humo cyberpunk sutil flotando en el techo — solo desktop (textures pesadas) */}
+      {!IS_MOBILE && <CeilingClouds count={6} ceilingY={5.6} roomSize={10} />}
 
-      {/* Partículas de polvo cinemáticas — menos en mobile para no lagear */}
-      <DustParticles count={IS_MOBILE ? 30 : 90} roomSize={11} roomHeight={5.5} />
+      {/* Partículas de polvo cinemáticas — drásticamente menos en mobile */}
+      <DustParticles count={IS_MOBILE ? 15 : 90} roomSize={11} roomHeight={5.5} />
 
       {/* Luz LED real saliendo de la lámpara de techo */}
       {layout.lampara_techo && <LampLight position={layout.lampara_techo.pos} />}

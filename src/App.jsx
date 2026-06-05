@@ -11,6 +11,7 @@ import LoadingIntro from './components/LoadingIntro'
 import SceneLabel from './components/SceneLabel'
 import AssetsProgress from './components/AssetsProgress'
 import ErrorBoundary from './components/ErrorBoundary'
+import MobileFallback from './components/MobileFallback'
 import { assetPath } from './utils/assetPath'
 import { isMobile, deviceQuality } from './utils/device'
 import './App.css'
@@ -249,8 +250,18 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [editingAllowed, editMode, selectedItem, handleDeleteItem])
 
+  // 📱 En mobile: SIEMPRE HTML fallback. El 3D crashea el browser en gama media-baja.
+  // No hay forma confiable de detectar si el celu lo soportará, así que vamos al seguro.
+  if (IS_MOBILE) {
+    return (
+      <ErrorBoundary>
+        <MobileFallback />
+      </ErrorBoundary>
+    )
+  }
+
   return (
-    <ErrorBoundary>
+    <ErrorBoundary fallbackUI={<MobileFallback />}>
     <div className={`app ${IS_MOBILE ? 'is-mobile' : 'is-desktop'} quality-${QUALITY}`}>
       <header className="hud">
         <h1>DevOffice 3D <span className="neon">// Melissa García</span></h1>
@@ -323,10 +334,13 @@ export default function App() {
           powerPreference: IS_MOBILE ? 'low-power' : 'high-performance',
           alpha: false,
           stencil: false,
+          depth: true,
+          preserveDrawingBuffer: false,
+          failIfMajorPerformanceCaveat: false,
         }}
-        dpr={IS_MOBILE ? [1, 1.5] : [1, 2]}
+        dpr={IS_MOBILE ? 1 : [1, 2]}        // mobile: DPR fijo en 1 (mucho más liviano)
+        flat={IS_MOBILE}                      // mobile: sin tone mapping
         onCreated={({ gl }) => {
-          // Limpio fondo por si el Canvas no se vuelve a renderizar (fallback visual)
           gl.setClearColor('#05060f')
         }}
       >
