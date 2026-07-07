@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 import { TransformControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import Model from './Model'
+import AvatarModel from './AvatarModel'
 import ProjectAura from './ProjectAura'
 
 export default function EditableModel({
@@ -120,11 +121,10 @@ export default function EditableModel({
         onPointerOut={onView ? () => { setHovered(false); document.body.style.cursor = 'auto' } : undefined}
       >
         <group ref={innerRef}>
-          <Model
-            url={url}
-            targetSize={targetSize}
-            pivot={pivot}
-          />
+          {url?.toLowerCase().includes('avatarh')
+            ? <AvatarModel url={url} targetSize={targetSize} pivot={pivot} />
+            : <Model url={url} targetSize={targetSize} pivot={pivot} />
+          }
           {auraColor && !editMode && (
             <ProjectAura color={auraColor} hovered={hovered} size={Math.max(0.4, targetSize * 0.55)} />
           )}
