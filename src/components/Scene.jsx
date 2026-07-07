@@ -20,12 +20,12 @@ import { PROJECTS } from '../data/projects'
 
 // __LAYOUT_START__
 export const INITIAL_LAYOUT = {
-  escritorio      : { url: '/models/escritorio.glb', pivot: 'base', pos: [0, 0, 0], size: 3 },
-  silla           : { url: '/models/silla.glb', pivot: 'base', pos: [0, 0, 1.32], size: 2.6, rot: [0, 3.141592653589793, 0] },
+  escritorio      : { url: '/models/escritorio.glb', pivot: 'base', pos: [0, -0.09, 0.17], size: 3 },
+  silla           : { url: '/models/silla.glb', pivot: 'base', pos: [-0.17, 0.04, 1.2], size: 2.6, rot: [-3.128, 0, -3.142] },
   planta          : { url: '/models/planta.glb', pivot: 'base', pos: [-5.06, -0.11, -0.01], size: 2.6 },
-  monitores       : { url: '/models/monitores.glb', pivot: 'base', pos: [-0.05, 1.59, -0.25], size: 2.58, rot: [0, 1.361, 0] },
-  teclado         : { url: '/models/teclado.glb', pivot: 'base', pos: [0.03, 1.55, 0.09], size: 1, rot: [-0.012, -0.008, 0.002] },
-  telefono        : { url: '/models/telefono.glb', pivot: 'base', pos: [1.25, 1.58, -0.39], size: 0.5, rot: [-3.142, 0.679, -3.142] },
+  monitores       : { url: '/models/monitores.glb', pivot: 'base', pos: [-0.05, 1.48, -0.21], size: 2.58, rot: [0, 1.361, 0] },
+  teclado         : { url: '/models/teclado.glb', pivot: 'base', pos: [-0.27, 1.36, 0.31], size: 1, rot: [-0.036, -0.008, 0.002] },
+  telefono        : { url: '/models/telefono.glb', pivot: 'base', pos: [1.25, 1.52, -0.32], size: 0.5, rot: [-3.142, 0.679, -3.142] },
   trofeo          : { url: '/models/trofeo.glb', pivot: 'base', pos: [3.9, 3.64, -5.26], size: 0.6, rot: [0, 0.078, 0] },
   repisa          : { url: '/models/repisa.glb', pivot: 'base', pos: [3.36, 1.05, -5.35], size: 4.5, rot: [0, -1.549, 0] },
   libros1         : { url: '/models/libros1.glb', pivot: 'base', pos: [2.47, 3.01, -5.08], size: 0.8, rot: [0.784, -0.024, -1.469] },
@@ -35,13 +35,13 @@ export const INITIAL_LAYOUT = {
   libros1_e       : { url: '/models/libros1.glb', pivot: 'base', pos: [3.65, 1.88, -4.96], size: 0.7, rot: [0, -1.549, 0] },
   libros2         : { url: '/models/libros2.glb', pivot: 'base', pos: [1.46, 3.01, -5.12], size: 0.8, rot: [0.036, 0, -1.558] },
   equipo_sonido   : { url: '/models/equipo-sonido.glb', pivot: 'base', pos: [-4.43, -0.05, 4.77], size: 3.54, rot: [3.141, 0.567, 3.141] },
-  letrero         : { url: '/models/letrero.glb', pivot: 'base', pos: [5.85, 3.81, -1.85], size: 2, rot: [-0.118, -1.555, -0.07] },
+  letrero         : { url: '/models/letrero.glb', pivot: 'base', pos: [5.97, 4, -1.49], size: 2, rot: [-0.118, -1.555, -0.07] },
   lampara_techo   : { url: '/models/lampara-techo.glb', pivot: 'center', pos: [0, 5.85, 0.24], size: 2.64, rot: [0, 0, 0] },
   p_new_styles    : { url: '/models/proj-new-styles.glb', projectId: 'new-styles', pivot: 'base', pos: [-5.98, 0.54, -2.83], size: 4.85, rot: [-3.142, 1.546, -3.142] },
   p_bendita_joya  : { url: '/models/proj-bendita-joya.glb', projectId: 'bendita-joya', pivot: 'base', pos: [0.12, 3.13, -5.63], size: 0.93, rot: [0.037, 0.044, -0.004], animate: 'float' },
-  p_dashboard     : { url: '/models/proj-dashboard.glb', projectId: 'dashboard', pivot: 'base', pos: [0.65, 2.04, -0.27], size: 0.81, rot: [0, -0.336, 0] },
+  p_dashboard     : { url: '/models/proj-dashboard.glb', projectId: 'dashboard', pivot: 'base', pos: [0.65, 1.92, -0.26], size: 0.81, rot: [-0.013, -0.298, 0.002] },
   p_paseaperros   : { url: '/models/proj-paseaperros.glb', projectId: 'paseaperros', pivot: 'base', pos: [4.6, 0, -0.26], size: 0.8, rot: [0, -1.058, 0], animate: 'puppy' },
-  p_blog_js       : { url: '/models/proj-blog-js.glb', projectId: 'blog-js', pivot: 'base', pos: [-0.99, 1.59, 0.41], size: 0.6, rot: [0.114, 0.557, -0.115] },
+  p_blog_js       : { url: '/models/proj-blog-js.glb', projectId: 'blog-js', pivot: 'base', pos: [-1.14, 1.59, 0.41], size: 0.6, rot: [0.114, 0.557, -0.115] },
   p_comandas      : { url: '/models/proj-comandas.glb', projectId: 'comandas', pivot: 'base', pos: [2.62, 3.66, -5.11], size: 0.6, rot: [0.016, 0.182, -0.035] },
   wave_left       : { kind: 'sound', pos: [-5.32, 1.12, 3.68], rot: [0, -0.631, 0], colorA: '#00ffff', colorB: '#ff00ff', maxRadius: 0.55, speed: 1.5, count: 4 },
   wave_right      : { kind: 'sound', pos: [-3.06, 1.13, 5.1], rot: [0, -0.533, 0], colorA: '#ff00ff', colorB: '#00ffff', maxRadius: 0.55, speed: 1.5, count: 4 },
@@ -49,12 +49,12 @@ export const INITIAL_LAYOUT = {
   wave_right_bot  : { kind: 'sound', pos: [-3.06, 0.55, 5.1], rot: [0, -0.533, 0], colorA: '#00ffff', colorB: '#ff00ff', maxRadius: 0.45, speed: 1.1, count: 3 },
   wave_floor      : { kind: 'sound', pos: [-4.44, 0.04, 4.77], colorA: '#ff00ff', colorB: '#00ffff', maxRadius: 2, speed: 0.55, count: 3, emitTowards: 'floor' },
   equalizer       : { kind: 'eq', pos: [-4.25, 2.23, 4.44], rot: [0, -0.6, 0], bars: 12, width: 0.52, height: 0.19, colorLow: '#00ffff', colorHigh: '#ff00ff', speed: 2.8 },
-  live_metrics    : { kind: 'dashboard', pos: [-0.77, 2.28, -0.35], rot: [0, 0.352, 0], size: 1 },
-  tech_stack      : { kind: 'techstack', pos: [5.91, 2.52, -1.83], rot: [1.554, -1.565, 1.554], size: 1 },
-  avatar          : { url: '/models/Avatar.glb', pivot: 'base', pos: [1.58, 0.02, 1.85], size: 3, rot: [-3.1, 0.896, -3.127] },
+  live_metrics    : { kind: 'dashboard', pos: [-0.77, 2.18, -0.32], rot: [-0.071, 0.359, 0.022], size: 1 },
+  tech_stack      : { kind: 'techstack', pos: [5.97, 2.49, -1.49], rot: [1.554, -1.565, 1.554], size: 1 },
+  avatar          : { url: '/models/AvatarH.glb', pivot: 'base', pos: [-0.08, -0.6, 1.04], size: 3, rot: [-2.946, 0, 3.141] },
   taza_cafe       : { url: '/models/tazadecafe.glb', pivot: 'base', pos: [1.64, 1.55, 0.17], size: 0.37, rot: [0, 0, 0] },
   taza_efectos    : { kind: 'prop', type: 'mugsteam', pos: [1.58, 1.44, 0.16], rot: [0, 0, 0], size: 1.98, accentColor: '#ff66cc' },
-  mouse           : { url: '/models/mouse.glb', pivot: 'base', pos: [0.76, 1.6, 0.23], size: 0.33, rot: [3.141, -0.221, 3.141] },
+  mouse           : { url: '/models/mouse.glb', pivot: 'base', pos: [0.35, 1.48, 0.5], size: 0.33, rot: [3.141, -0.221, 3.141] },
   wall_display    : { kind: 'prop', type: 'walldisplay', pos: [-1.04, 3.36, 5.78], rot: [-3.142, 0.027, -3.142], size: 1 },
   puerta          : { kind: 'prop', type: 'cyberdoor', pos: [3.35, 2.21, 5.93], rot: [0, 3.141592653589793, 0], size: 1.73 },
 }
@@ -302,7 +302,7 @@ export default function Scene({ onSelectProject, onOpenAboutMe, editMode, select
         maxPolarAngle={Math.PI / 2 - 0.02}
         target={[0, 2, -1]}
       />
-      <CameraKeyboardControls controlsRef={controlsRef} speed={8} cameraMode={cameraMode} onUserInteract={onCameraMode} onTourIndex={onTourIndex} />
+      <CameraKeyboardControls controlsRef={controlsRef} speed={8} cameraMode={cameraMode} onUserInteract={onCameraMode} onTourIndex={onTourIndex} layout={layout} />
     </>
   )
 }
