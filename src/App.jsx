@@ -16,8 +16,8 @@ import { assetPath } from './utils/assetPath'
 import { isMobile, deviceQuality } from './utils/device'
 import './App.css'
 
-const STORAGE_KEY = 'devoffice-3d-layout-v1'
-const DELETED_KEY = 'devoffice-3d-deleted-v1'
+const STORAGE_KEY = 'devoffice-3d-layout-v2'
+const DELETED_KEY = 'devoffice-3d-deleted-v2'
 
 function loadDeletedSet() {
   try {
@@ -80,6 +80,7 @@ export default function App() {
   const editingAllowed = import.meta.env.DEV
   const [savedFlash, setSavedFlash] = useState(false)
   const [musicState, setMusicState] = useState('loading')
+  const [volume, setVolume] = useState(0.18)
   const flashTimer = useRef(null)
   const audioContextRef = useRef(null)
   const audioBufferRef = useRef(null)
@@ -182,6 +183,12 @@ export default function App() {
     if (musicState === 'error') return
     void startMusicRef.current()
   }, [musicState])
+
+  const handleVolumeChange = useCallback((e) => {
+    const v = parseFloat(e.target.value)
+    setVolume(v)
+    if (gainNodeRef.current) gainNodeRef.current.gain.value = v
+  }, [])
 
   const handleUpdateLayout = useCallback((name, changes) => {
     // 🛡️ En producción: no-op total. Aunque alguien fuerce editMode=true desde DevTools,
@@ -307,15 +314,34 @@ export default function App() {
         >
           <strong>?</strong>
         </button>
-        <button
-          className={`pill pill-music ${musicState === 'playing' ? 'pill-music-on' : ''}`}
-          onClick={handleMusicToggle}
-          disabled={musicState === 'error'}
-          title={musicState === 'playing' ? 'Música activada' : 'Activar música ambiente'}
-        >
-          <span className="pill-icon">♪</span>
-          {musicState === 'playing' ? 'Sonando' : musicState === 'ready' ? 'Música' : musicState === 'error' ? 'No disp.' : 'Cargando'}
-        </button>
+        <div className={`volume-control ${musicState === 'playing' ? 'volume-control-active' : ''}`}>
+          <button
+            className={`pill pill-music ${musicState === 'playing' ? 'pill-music-on' : ''}`}
+            onClick={handleMusicToggle}
+            disabled={musicState === 'error'}
+            title={musicState === 'playing' ? 'Música activada' : 'Activar música ambiente'}
+          >
+            <span className="pill-icon">♪</span>
+            {musicState === 'playing' ? 'ON' : musicState === 'ready' ? 'Música' : musicState === 'error' ? 'No disp.' : '...'}
+          </button>
+          {musicState === 'playing' && (
+            <div className="volume-slider-wrap">
+              <span className="volume-icon">▮</span>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="volume-slider"
+                aria-label="Volumen"
+                style={{ '--vol': `${volume * 100}%` }}
+              />
+              <span className="volume-pct">{Math.round(volume * 100)}</span>
+            </div>
+          )}
+        </div>
         {editingAllowed && (
           <button
             className={`btn ${editMode ? 'btn-magenta' : ''}`}
@@ -415,6 +441,14 @@ export default function App() {
       )}
 
       {aboutMeOpen && <AboutMePanel onClose={() => setAboutMeOpen(false)} />}
+
+      {/* Barras cinematográficas (letterbox) durante el recorrido */}
+      {cameraMode === 'tour' && !editMode && (
+        <div className="cine-bars" aria-hidden="true">
+          <div className="cine-bar cine-bar-top" />
+          <div className="cine-bar cine-bar-bottom" />
+        </div>
+      )}
 
       {/* Scene labels durante el recorrido (Netflix style) */}
       <SceneLabel tourIndex={tourIndex} active={cameraMode === 'tour'} />

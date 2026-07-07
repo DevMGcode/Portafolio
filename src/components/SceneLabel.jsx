@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { TOUR_POINTS } from './CameraKeyboardControls'
+import { TOUR_SHOTS } from './CameraKeyboardControls'
 
 /**
  * Overlay tipo Netflix/documental que muestra el título de cada escena del recorrido.
@@ -38,10 +38,10 @@ export default function SceneLabel({ tourIndex, active }) {
 
   if (!visible || !active) return null
 
-  const point = TOUR_POINTS[displayIndex]
+  const point = TOUR_SHOTS[displayIndex]
   if (!point || !point.label) return null
 
-  const total = TOUR_POINTS.length
+  const total = TOUR_SHOTS.length
 
   return (
     <div className={`scene-label ${fading ? 'scene-fading' : ''}`}>
