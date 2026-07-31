@@ -1,23 +1,19 @@
-import { useProgress } from '@react-three/drei'
 import { useEffect } from 'react'
 
 /**
- * Componente invisible que reporta el progreso de carga de assets 3D al exterior.
- * Se monta dentro del Canvas y usa useProgress de drei.
+ * Señal de "escena lista". Se coloca DENTRO del <Suspense> como hermano de la
+ * escena: mientras cualquier modelo esté cargando, el Suspense muestra su
+ * fallback y este componente NO se monta. Cuando todo terminó de cargar, el
+ * subárbol se monta y disparamos onReady exactamente una vez.
+ *
+ * Antes esto usaba useProgress() de drei, pero al re-renderizarse durante el
+ * render de los <Model> generaba el warning "setState while rendering another
+ * component". Montarse tras el Suspense es más simple y 100% confiable.
  */
-export default function AssetsProgress({ onProgress, onReady }) {
-  const { progress, loaded, total, active } = useProgress()
-
+export default function AssetsProgress({ onReady }) {
   useEffect(() => {
-    if (onProgress) onProgress(progress)
-  }, [progress, onProgress])
-
-  useEffect(() => {
-    // Listo cuando: progreso 100 + no hay activos + se cargó al menos algo
-    if (progress >= 100 && !active && loaded > 0) {
-      if (onReady) onReady()
-    }
-  }, [progress, active, loaded, onReady])
+    onReady?.()
+  }, [onReady])
 
   return null
 }

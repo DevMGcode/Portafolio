@@ -70,7 +70,6 @@ export default function App() {
   const [aboutMeOpen, setAboutMeOpen] = useState(false)
   const [introVisible, setIntroVisible] = useState(true)
   const [tourIndex, setTourIndex] = useState(0)
-  const [assetProgress, setAssetProgress] = useState(0)
   const [assetsReady, setAssetsReady] = useState(false)
   // Flag: ¿el help se abrió como parte del flujo de bienvenida (post-intro)?
   // Cuando se cierre por primera vez → arranca el recorrido automáticamente.
@@ -373,10 +372,10 @@ export default function App() {
         <color attach="background" args={['#05060f']} />
         <fog attach="fog" args={['#05060f', 10, 30]} />
         <Suspense fallback={null}>
-          <AssetsProgress
-            onProgress={setAssetProgress}
-            onReady={() => setAssetsReady(true)}
-          />
+          {/* Dentro del Suspense: solo se monta cuando TODA la escena terminó
+              de cargar → dispara assetsReady. Así la intro nunca deja pasar a
+              una escena a medio cargar (que se vería negra). */}
+          <AssetsProgress onReady={() => setAssetsReady(true)} />
           <Scene
             onSelectProject={setSelectedProject}
             onOpenAboutMe={() => setAboutMeOpen(true)}
@@ -456,7 +455,6 @@ export default function App() {
       {/* Loading intro cyberpunk (espera a que carguen los assets 3D) */}
       {introVisible && (
         <LoadingIntro
-          assetProgress={assetProgress}
           assetsReady={assetsReady}
           onFinish={() => {
             setIntroVisible(false)

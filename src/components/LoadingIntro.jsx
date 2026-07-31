@@ -21,7 +21,7 @@ const LINES = [
 const MIN_DURATION = 4200             // intro mínimo de 4.2s (para que se aprecie)
 const FADE_DURATION = 800              // ms del fade out
 
-export default function LoadingIntro({ onFinish, assetProgress = 0, assetsReady = false }) {
+export default function LoadingIntro({ onFinish, assetsReady = false }) {
   const [visibleLines, setVisibleLines] = useState([])
   const [progress, setProgress] = useState(0)
   const [fading, setFading] = useState(false)
@@ -46,13 +46,13 @@ export default function LoadingIntro({ onFinish, assetProgress = 0, assetsReady 
       }, line.delay),
     )
 
-    // Animar la progress bar combinando tiempo + progreso real de assets
+    // Piso de tiempo: da movimiento suave a la barra aunque el progreso real
+    // tarde en reportar. Tope 85% → nunca "miente" diciendo 100% antes de que
+    // los assets estén realmente listos (eso solo pasa con assetsReady).
     const progressInterval = setInterval(() => {
       const elapsed = performance.now() - startTime.current
-      const timeProgress = Math.min(100, (elapsed / MIN_DURATION) * 100)
-      // El progreso visible es el MENOR entre tiempo y assets reales
-      // (para que no diga 100% si los assets aún no cargaron)
-      setProgress(timeProgress)
+      const timeFloor = Math.min(85, (elapsed / MIN_DURATION) * 85)
+      setProgress(timeFloor)
     }, 30)
 
     return () => {
@@ -79,8 +79,14 @@ export default function LoadingIntro({ onFinish, assetProgress = 0, assetsReady 
     }
   }, [assetsReady, fading])
 
-  // Click para saltar
+  // Porcentaje mostrado: piso de tiempo suave, topado a 99% hasta que la escena
+  // esté realmente lista (assetsReady) → ahí salta a 100 y la barra llega al final.
+  const displayPct = assetsReady ? 100 : Math.min(99, Math.round(progress))
+
+  // Click para saltar — SOLO cuando los assets ya cargaron. Si no, saltar
+  // dejaría la escena a medio cargar y se vería todo negro.
   const handleClick = () => {
+    if (!assetsReady || fading) return
     setFading(true)
     setTimeout(() => onFinish?.(), FADE_DURATION)
   }
@@ -124,21 +130,16 @@ export default function LoadingIntro({ onFinish, assetProgress = 0, assetsReady 
           ))}
         </div>
 
-        {/* Progress bar — muestra el progreso real combinado de tiempo + assets */}
+        {/* Progress bar — porcentaje honesto: el mayor entre el progreso real
+            de assets y el piso de tiempo, topado a 99% hasta que TODO esté
+            listo (assetsReady). Así la barra siempre llega al final. */}
         <div className="intro-progress-wrap">
           <div className="intro-progress-label">
             <span>LOADING ASSETS</span>
-            <span>
-              {assetsReady ? '100' : Math.floor(Math.min(progress, assetProgress || progress))}%
-            </span>
+            <span>{displayPct}%</span>
           </div>
           <div className="intro-progress-bar">
-            <div
-              className="intro-progress-fill"
-              style={{
-                width: `${assetsReady ? 100 : Math.min(progress, Math.max(assetProgress, progress * 0.6))}%`,
-              }}
-            />
+            <div className="intro-progress-fill" style={{ width: `${displayPct}%` }} />
           </div>
         </div>
 
