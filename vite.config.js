@@ -53,10 +53,12 @@ function layoutWriterPlugin() {
   }
 }
 
-// Para GitHub Pages: el sitio se sirve desde /Portafolio/ (nombre del repo).
-// Usamos la función de defineConfig que recibe { command } para detectar dev vs build
-// de forma 100% confiable (sin depender de NODE_ENV).
+// Base según el destino del deploy:
+//  - GitHub Pages: se sirve desde /Portafolio/ (nombre del repo).
+//  - Netlify: se sirve desde la raíz '/'. Netlify define NETLIFY=true en su build,
+//    así que lo detectamos para no tener que tocar nada al migrar.
+//  - dev: siempre '/'.
 export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/Portafolio/' : '/',
+  base: command === 'build' && !process.env.NETLIFY ? '/Portafolio/' : '/',
   plugins: [react(), layoutWriterPlugin()],
 }))

@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Fallback tipo SPA: cualquier ruta desconocida sirve index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
