@@ -55,8 +55,13 @@ function loadSavedLayout() {
   }
 }
 
-// Detecciones de device (se calcula 1 vez al cargar)
-const IS_MOBILE = isMobile()
+// Detecciones de device (se calcula 1 vez al cargar).
+// Override manual con ?mobile en la URL → fuerza la vista móvil HTML
+// (útil para previsualizar/demostrar la versión móvil desde un desktop).
+const FORCE_MOBILE =
+  typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).has('mobile')
+const IS_MOBILE = isMobile() || FORCE_MOBILE
 const QUALITY = deviceQuality()
 
 export default function App() {
