@@ -1,13 +1,18 @@
 # DevOffice 3D · Portfolio de Melissa García
 
-Portfolio interactivo 3D estilo cyberpunk construido con React + Three.js.
-Una habitación virtual habitable donde cada elemento cuenta parte de mi historia
-como desarrolladora: stack, proyectos, workflow, identidad.
+> Portfolio interactivo 3D estilo cyberpunk construido con **React + Three.js**.
+> Una habitación virtual habitable donde cada elemento cuenta parte de mi historia
+> como desarrolladora: stack, proyectos, workflow e identidad.
 
-🔗 **Live**: https://devmgcode.github.io/Portafolio/
+### 🔗 [**Ver en vivo → melissa-garcia.netlify.app**](https://melissa-garcia.netlify.app)
+
+<sub>💻 En escritorio → experiencia 3D completa · 📱 En móvil → versión HTML de alto rendimiento</sub>
+
+---
 
 ## ✨ Features
 
+### 🖥️ Experiencia 3D (escritorio)
 - 🎬 **Loading intro cyberpunk** con typewriter, scanlines y progress bar
 - 🏠 **Habitación 3D completa** con paredes hex tech, piso reflejante, lámpara LED
 - 👤 **Avatar 3D** clickeable con modal *Sobre mí* completo (bio, stack, workflow)
@@ -23,6 +28,16 @@ como desarrolladora: stack, proyectos, workflow, identidad.
 - 📞 **Teléfono interactivo** que abre WhatsApp
 - 🎨 **Post-processing** Bloom + Vignette + Chromatic Aberration sutil
 
+### 📱 Versión móvil (rediseño premium)
+- 🚀 **Hero animado** con rol rotativo tipo terminal y badge de disponibilidad
+- 🎞️ **Reveal al scroll** con slide + desenfoque en cada sección
+- 📈 **Stats con contador** animado (count-up)
+- 🧩 **Tech stack en cascada** — chips que entran escalonados
+- 🗂️ **Cards de proyecto** con barrido de luz y modal tipo *bottom-sheet*
+- 💬 **Botón flotante de WhatsApp** siempre accesible
+- ⚡ Animaciones 100% GPU (transform / opacity) — vuela en gama baja
+- ♿ Respeta `prefers-reduced-motion`
+
 ## 🛠️ Stack
 
 | | |
@@ -30,7 +45,7 @@ como desarrolladora: stack, proyectos, workflow, identidad.
 | 🎨 **Frontend** | React 19 · Vite 8 |
 | 🌐 **3D** | Three.js · @react-three/fiber · @react-three/drei |
 | 🎬 **Effects** | @react-three/postprocessing |
-| 📦 **Deploy** | GitHub Pages · gh-pages |
+| 📦 **Deploy** | Netlify (CI automático desde `main`) |
 
 ## 🚀 Desarrollo local
 
@@ -39,15 +54,32 @@ npm install
 npm run dev
 ```
 
-Abrí http://localhost:5173/ o el puerto que diga la terminal.
+Abre http://localhost:5173/ (o el puerto que indique la terminal).
+
+> 💡 **Tip:** añade `?mobile` a la URL (`localhost:5173/?mobile`) para previsualizar
+> la versión móvil desde el escritorio.
 
 ## 📦 Deploy
 
+El sitio se despliega en **Netlify** de forma automática: cada `git push` a la rama
+`main` dispara un nuevo build (`npm run build`) y publica la carpeta `dist`.
+
 ```bash
-npm run deploy
+git add -A
+git commit -m "mensaje"
+git push origin main   # → Netlify redespliega solo
 ```
 
-Compila el proyecto y sube a la branch `gh-pages` automáticamente.
+<details>
+<summary>Deploy legacy en GitHub Pages (opcional)</summary>
+
+El proyecto conserva el script `gh-pages` por si se quiere publicar también en
+GitHub Pages. Usa `base: '/Portafolio/'` automáticamente cuando no corre en Netlify.
+
+```bash
+npm run deploy   # compila y sube a la branch gh-pages
+```
+</details>
 
 ## 📂 Estructura
 
@@ -56,13 +88,15 @@ src/
 ├─ App.jsx                  # Root + intro + music + modals
 ├─ components/
 │  ├─ Scene.jsx             # Layout principal de la escena
+│  ├─ MobileFallback.jsx    # Experiencia móvil (HTML premium)
+│  ├─ MobileFallback.css    # Estilos + animaciones de la versión móvil
 │  ├─ EditableModel.jsx     # Wrapper editable para modelos GLB
 │  ├─ EditableProp.jsx      # Wrapper editable para props procedurales
 │  ├─ Avatar / Modal        # AboutMePanel, CyberCityWindow, etc.
 │  └─ ...                   # ~30 componentes especializados
 ├─ data/
 │  └─ projects.js           # Metadata de los proyectos
-└─ App.css                  # Estilos cyberpunk
+└─ App.css                  # Estilos cyberpunk (escritorio)
 public/
 └─ models/                  # GLBs de muebles, avatar, proyectos
 ```
