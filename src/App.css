@@ -2387,3 +2387,181 @@ canvas { display: block; }
   border-radius: 2px;
   background: linear-gradient(to right, #00ff88, #00ffff);
 }
+
+/* ============================================================
+   PANEL DE CERTIFICADOS (abre el libro de la repisa)
+   ============================================================ */
+.cert-panel {
+  position: relative;
+  width: min(940px, 94%);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #060912 0%, #02030a 100%);
+  border: 1px solid #00ffff;
+  border-radius: 10px;
+  box-shadow: 0 0 60px rgba(0, 255, 255, 0.28), inset 0 0 30px rgba(0, 255, 255, 0.05);
+  color: #c6e8ff;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  animation: cert-rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes cert-rise {
+  from { transform: translateY(24px) scale(0.98); opacity: 0; }
+}
+
+.cert-titlebar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.28);
+  font-family: 'Consolas', monospace; font-size: 13px;
+  flex: 0 0 auto;
+}
+.cert-dot { width: 9px; height: 9px; border-radius: 50%; background: #00ffff; box-shadow: 0 0 8px #00ffff; }
+.cert-prompt { flex: 1; color: #9fe9ff; }
+.cert-close {
+  width: 26px; height: 26px; border-radius: 5px;
+  border: 1px solid rgba(0, 255, 255, 0.5); background: transparent;
+  color: #00ffff; font-size: 15px; cursor: pointer; line-height: 1;
+}
+.cert-close:hover { background: #00ffff; color: #000; }
+
+.cert-body { display: grid; grid-template-columns: 132px 1fr; min-height: 0; flex: 1 1 auto; }
+
+/* Rail de años */
+.cert-years { border-right: 1px solid rgba(0, 255, 255, 0.16); padding: 16px 0; overflow: auto; }
+.cert-years-lbl { font-family: 'Consolas', monospace; font-size: 10px; letter-spacing: 2px; color: #5f7ea3; padding: 0 16px 10px; }
+.cert-yr {
+  position: relative; display: block; width: 100%; text-align: left;
+  background: none; border: 0; cursor: pointer;
+  font-family: 'Consolas', monospace; font-weight: 700; font-size: 17px;
+  color: #5f7ea3; padding: 9px 16px; letter-spacing: 1px; transition: 0.2s;
+}
+.cert-yr-n { font-size: 10px; color: #0e6f7a; margin-left: 6px; }
+.cert-yr::before {
+  content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 0; background: #00ffff; box-shadow: 0 0 10px #00ffff; transition: 0.2s;
+}
+.cert-yr:hover { color: #c6e8ff; }
+.cert-yr.active { color: #eaffff; text-shadow: 0 0 12px #00ffff; }
+.cert-yr.active::before { height: 64%; }
+
+/* Lista */
+.cert-list { position: relative; overflow: auto; padding: 16px 18px 22px; }
+.cert-scan {
+  position: absolute; left: 0; right: 0; top: 0; height: 2px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  opacity: 0.45; animation: cert-scanmove 4.5s linear infinite;
+}
+@keyframes cert-scanmove { 0% { top: 0; } 100% { top: 100%; } }
+.cert-group { margin-bottom: 22px; }
+.cert-yhead { display: flex; align-items: center; gap: 12px; margin: 2px 0 14px; }
+.cert-yhead h3 {
+  margin: 0; font-family: 'Consolas', monospace; font-weight: 700; font-size: 22px;
+  color: #00ffff; text-shadow: 0 0 14px rgba(0, 255, 255, 0.5); letter-spacing: 2px;
+}
+.cert-rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(0, 255, 255, 0.5), transparent); }
+.cert-cnt { font-family: 'Consolas', monospace; font-size: 11px; color: #5f7ea3; }
+
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.cert-card {
+  position: relative; border: 1px solid #12233d; border-radius: 8px; overflow: hidden;
+  background: linear-gradient(180deg, rgba(10, 20, 34, 0.7), rgba(3, 6, 14, 0.9));
+  transition: 0.22s; cursor: pointer;
+}
+.cert-card:hover { border-color: #00ffff; transform: translateY(-3px); box-shadow: 0 8px 26px rgba(0, 255, 255, 0.16); }
+.cert-thumb {
+  position: relative; aspect-ratio: 16 / 10; display: grid; place-items: center;
+  background:
+    repeating-linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0 12px, transparent 12px 24px),
+    linear-gradient(135deg, #0a1c2b, #0a1220);
+  border-bottom: 1px solid #12233d; color: #0e6f7a;
+  font-family: 'Consolas', monospace; font-size: 11px; letter-spacing: 1px;
+}
+.cert-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cert-ph { display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: 0.75; }
+.cert-ph-ic { font-size: 26px; filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.4)); }
+.cert-seal { position: absolute; right: 8px; top: 8px; font-size: 14px; color: #ff00ff; text-shadow: 0 0 8px #ff00ff; }
+.cert-cbody { padding: 11px 12px 13px; }
+.cert-cbody h4 { margin: 0 0 4px; font-weight: 700; font-size: 15px; color: #eaffff; line-height: 1.2; }
+.cert-iss {
+  font-family: 'Consolas', monospace; font-size: 11px; color: #5f7ea3;
+  display: flex; justify-content: space-between; gap: 8px; margin-top: 6px;
+}
+.cert-iss .cert-d { color: #00ffff; }
+.cert-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.cert-tag {
+  font-family: 'Consolas', monospace; font-size: 10px; color: #aa3bff;
+  border: 1px solid rgba(170, 59, 255, 0.45); border-radius: 3px; padding: 2px 6px; letter-spacing: 0.5px;
+}
+
+.cert-foot {
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 11px 16px; border-top: 1px solid rgba(0, 255, 255, 0.2);
+  font-family: 'Consolas', monospace; font-size: 12px; color: #5f7ea3; flex-wrap: wrap;
+}
+.cert-foot b { color: #00ffff; }
+
+/* Etiqueta flotante 3D sobre el libro (hover) */
+.cert-book-label {
+  color: #eaffff; font-size: 11px; font-family: 'Segoe UI', sans-serif; font-weight: 600;
+  text-shadow: 0 0 8px #00ffff; white-space: nowrap; pointer-events: none;
+  letter-spacing: 0.5px; padding: 3px 8px; background: rgba(5, 6, 15, 0.82);
+  border: 1px solid #00ffff; border-radius: 3px; backdrop-filter: blur(3px);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+@media (max-width: 560px) {
+  .cert-body { grid-template-columns: 1fr; }
+  .cert-years {
+    display: flex; gap: 4px; overflow-x: auto; border-right: 0;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.16); padding: 10px;
+  }
+  .cert-years-lbl { display: none; }
+  .cert-yr { width: auto; padding: 6px 12px; }
+  .cert-yr.active::before { display: none; }
+}
+
+/* ---- Visor expandido de un certificado (lightbox dentro del panel) ---- */
+.cert-zoom {
+  position: absolute; inset: 0; z-index: 5;
+  background: rgba(2, 3, 10, 0.86); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 22px;
+  border-radius: 10px; animation: cert-fade 0.2s ease;
+}
+@keyframes cert-fade { from { opacity: 0; } }
+.cert-zoom-inner {
+  position: relative; width: min(680px, 100%); max-height: 100%;
+  display: flex; flex-direction: column; gap: 14px;
+  background: linear-gradient(180deg, #081020, #03060e);
+  border: 1px solid #00ffff; border-radius: 10px; padding: 18px;
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.35);
+  animation: cert-rise 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cert-zoom-close { position: absolute; top: 12px; right: 12px; z-index: 2; }
+.cert-zoom-img {
+  position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 8px;
+  border: 1px solid #12233d;
+  background:
+    repeating-linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0 14px, transparent 14px 28px),
+    linear-gradient(135deg, #0a1c2b, #0a1220);
+  display: grid; place-items: center;
+}
+.cert-zoom-img img { width: 100%; height: 100%; object-fit: contain; }
+.cert-ph-big { color: #0e6f7a; font-family: 'Consolas', monospace; letter-spacing: 1px; text-align: center; }
+.cert-ph-big .cert-ph-ic { font-size: 52px; }
+.cert-ph-big small { color: #3d5a78; font-size: 11px; }
+.cert-zoom-meta h3 {
+  margin: 0 0 6px; font-size: 20px; color: #eaffff; text-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+}
+.cert-zoom-sub {
+  display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  font-family: 'Consolas', monospace; font-size: 13px; color: #5f7ea3; margin-bottom: 10px;
+}
+.cert-zoom-sub .cert-d { color: #00ffff; }
+.cert-verify {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 14px;
+  font-family: 'Consolas', monospace; font-size: 13px; text-decoration: none;
+  color: #05060f; background: #00ffff; padding: 9px 16px; border-radius: 5px; font-weight: 700;
+  box-shadow: 0 0 18px rgba(0, 255, 255, 0.4); transition: 0.2s;
+}
+.cert-verify:hover { background: #ff00ff; box-shadow: 0 0 18px rgba(255, 0, 255, 0.5); }

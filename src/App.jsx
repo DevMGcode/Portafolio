@@ -4,6 +4,7 @@ import { EffectComposer, Bloom, Vignette, ChromaticAberration } from '@react-thr
 import { BlendFunction } from 'postprocessing'
 import Scene, { INITIAL_LAYOUT } from './components/Scene'
 import ProjectPanel from './components/ProjectPanel'
+import CertificatesPanel from './components/CertificatesPanel'
 import EditorPanel from './components/EditorPanel'
 import HelpPanel from './components/HelpPanel'
 import AboutMePanel from './components/AboutMePanel'
@@ -66,6 +67,7 @@ const QUALITY = deviceQuality()
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState(null)
+  const [certsOpen, setCertsOpen] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
   const [gizmoMode, setGizmoMode] = useState('translate')
@@ -384,6 +386,7 @@ export default function App() {
           <Scene
             onSelectProject={setSelectedProject}
             onOpenAboutMe={() => setAboutMeOpen(true)}
+            onOpenCerts={() => setCertsOpen(true)}
             /* 🛡️ Forzamos editMode a FALSE en producción para que ni los gizmos puedan aparecer */
             editMode={editingAllowed && editMode}
             selectedItem={editingAllowed ? selectedItem : null}
@@ -428,6 +431,10 @@ export default function App() {
 
       {selectedProject && !editMode && (
         <ProjectPanel project={selectedProject} onClose={() => setSelectedProject(null)} />
+      )}
+
+      {certsOpen && !editMode && (
+        <CertificatesPanel onClose={() => setCertsOpen(false)} />
       )}
 
       {helpOpen && (

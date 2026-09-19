@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { PROJECTS } from '../data/projects'
+import { CERTIFICATES, formatDate, groupByYear } from '../data/certificates'
 import { assetPath } from '../utils/assetPath'
 import './MobileFallback.css'
+
+const CERT_GROUPS = groupByYear(CERTIFICATES)
 
 /**
  * Versión mobile del portfolio — experiencia HTML de alta gama.
@@ -131,6 +134,7 @@ function StatTile({ value, suffix, label }) {
 
 export default function MobileFallback() {
   const [selectedProject, setSelectedProject] = useState(null)
+  const [selectedCert, setSelectedCert] = useState(null)
   const [roleIndex, setRoleIndex] = useState(0)
   const [progress, setProgress] = useState(0)
   const rootRef = useRef(null)
@@ -158,12 +162,12 @@ export default function MobileFallback() {
     target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [])
 
-  // Bloquea el scroll del fondo cuando el modal está abierto
+  // Bloquea el scroll del fondo cuando algún modal está abierto
   useEffect(() => {
-    if (selectedProject) document.body.classList.add('m3-noscroll')
+    if (selectedProject || selectedCert) document.body.classList.add('m3-noscroll')
     else document.body.classList.remove('m3-noscroll')
     return () => document.body.classList.remove('m3-noscroll')
-  }, [selectedProject])
+  }, [selectedProject, selectedCert])
 
   return (
     <div className="m3-root" ref={rootRef} onScroll={onScroll}>
@@ -324,9 +328,51 @@ export default function MobileFallback() {
         </div>
       </section>
 
+      {/* ═══ CERTIFICADOS ═══ */}
+      <section id="m3-certs" className="m3-section" data-reveal>
+        <h2 className="m3-h2"><span className="m3-h2-idx">05</span> Certificados</h2>
+        <p className="m3-hint-text">Toca un certificado para verlo en grande 👇</p>
+        {CERT_GROUPS.map((g) => (
+          <div key={g.year} className="m3-cert-group">
+            <div className="m3-cert-yhead">
+              <span className="m3-cert-year">{g.year}</span>
+              <span className="m3-cert-rule" />
+              <span className="m3-cert-cnt">{g.items.length} cert.</span>
+            </div>
+            <div className="m3-cert-grid">
+              {g.items.map((c, i) => (
+                <button
+                  key={i}
+                  className="m3-cert-card"
+                  style={{ '--d': `${i * 60}ms` }}
+                  onClick={() => setSelectedCert(c)}
+                >
+                  <div className="m3-cert-thumb">
+                    {c.image ? (
+                      <img src={assetPath(c.image)} alt={c.title} loading="lazy"
+                        onError={(e) => { e.target.style.opacity = 0 }} />
+                    ) : (
+                      <span className="m3-cert-ph">🎓</span>
+                    )}
+                    <span className="m3-cert-seal">◆</span>
+                  </div>
+                  <div className="m3-cert-info">
+                    <h3>{c.title}</h3>
+                    <div className="m3-cert-meta">
+                      <span>{c.issuer}</span>
+                      <span className="m3-cert-date">{formatDate(c.date)}</span>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
       {/* ═══ CONTACTO ═══ */}
       <section id="m3-contact" className="m3-section" data-reveal>
-        <h2 className="m3-h2"><span className="m3-h2-idx">05</span> Hablemos</h2>
+        <h2 className="m3-h2"><span className="m3-h2-idx">06</span> Hablemos</h2>
         <p className="m3-hint-text">¿Tienes un proyecto en mente? Escríbeme por donde prefieras.</p>
         <div className="m3-contacts">
           <a
@@ -431,6 +477,53 @@ export default function MobileFallback() {
               >
                 Ver proyecto en vivo ↗
               </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ MODAL CERTIFICADO ═══ */}
+      {selectedCert && (
+        <div className="m3-modal-overlay" onClick={() => setSelectedCert(null)}>
+          <div className="m3-modal m3-cert-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="m3-modal-close"
+              onClick={() => setSelectedCert(null)}
+              aria-label="Cerrar"
+            >
+              ×
+            </button>
+            <div className="m3-cert-modal-img">
+              {selectedCert.image ? (
+                <img src={assetPath(selectedCert.image)} alt={selectedCert.title}
+                  onError={(e) => { e.target.style.opacity = 0 }} />
+              ) : (
+                <div className="m3-cert-modal-ph">
+                  <span>🎓</span>
+                  <small>Aquí irá la imagen real del certificado</small>
+                </div>
+              )}
+            </div>
+            <div className="m3-modal-body">
+              <h2 className="m3-cert-modal-title">{selectedCert.title}</h2>
+              <p className="m3-cert-modal-sub">
+                {selectedCert.issuer} · <strong>{formatDate(selectedCert.date)}</strong>
+              </p>
+              {selectedCert.tags && (
+                <div className="m3-chips">
+                  {selectedCert.tags.map((t) => (
+                    <span key={t} className="m3-chip" style={{ '--c': '#00ffff', '--d': '0ms' }}>
+                      <span className="m3-chip-dot" style={{ background: '#00ffff' }} />
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {selectedCert.url && (
+                <a href={selectedCert.url} target="_blank" rel="noopener noreferrer" className="m3-modal-cta">
+                  Verificar certificado ↗
+                </a>
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { TransformControls } from '@react-three/drei'
+import { TransformControls, Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import Model from './Model'
 import AvatarModel from './AvatarModel'
@@ -22,6 +22,7 @@ export default function EditableModel({
   auraColor,
   screenTransform,
   selectedKey,
+  hoverLabel,
 }) {
   const groupRef = useRef()
   const innerRef = useRef()
@@ -127,6 +128,11 @@ export default function EditableModel({
           }
           {auraColor && !editMode && (
             <ProjectAura color={auraColor} hovered={hovered} size={Math.max(0.4, targetSize * 0.55)} />
+          )}
+          {hoverLabel && hovered && !editMode && (
+            <Html position={[0, targetSize * 0.75 + 0.4, 0]} center zIndexRange={[100, 0]}>
+              <div className="cert-book-label">{hoverLabel}</div>
+            </Html>
           )}
         </group>
       </group>
