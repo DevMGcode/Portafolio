@@ -62,7 +62,7 @@ export const INITIAL_LAYOUT = {
 
 const IS_MOBILE = isMobile()
 
-export default function Scene({ onSelectProject, onOpenAboutMe, editMode, selectedItem, onSelectItem, layout, onUpdateLayout, gizmoMode, cameraMode, onCameraMode, onTourIndex }) {
+export default function Scene({ onSelectProject, onOpenAboutMe, onOpenCerts, editMode, selectedItem, onSelectItem, layout, onUpdateLayout, gizmoMode, cameraMode, onCameraMode, onTourIndex }) {
   const controlsRef = useRef()
   const floorTexture = useMemo(() => makeFloorTexture(), [])
   return (
@@ -228,6 +228,10 @@ export default function Scene({ onSelectProject, onOpenAboutMe, editMode, select
         // Caso especial: el avatar abre el modal "Sobre Mí"
         const isAvatar = name === 'avatar'
         const avatarHandler = isAvatar && onOpenAboutMe ? () => onOpenAboutMe() : undefined
+        // Caso especial: el libro de la repisa (el que se ve en la vista "Repisa")
+        // abre el panel de Certificados
+        const isCertsBook = name === 'libros1_b'
+        const certsHandler = isCertsBook && onOpenCerts ? () => onOpenCerts() : undefined
         return (
           <EditableModel
             key={name}
@@ -243,9 +247,10 @@ export default function Scene({ onSelectProject, onOpenAboutMe, editMode, select
             gizmoMode={gizmoMode}
             onSelect={onSelectItem}
             onUpdate={onUpdateLayout}
-            onView={project ? () => onSelectProject(project) : (phoneHandler || avatarHandler)}
+            onView={project ? () => onSelectProject(project) : (phoneHandler || avatarHandler || certsHandler)}
             animate={item.animate}
-            auraColor={project?.color || (isPhone ? '#ffb3d9' : (isAvatar ? '#a78bfa' : undefined))}
+            auraColor={project?.color || (isPhone ? '#ffb3d9' : (isAvatar ? '#a78bfa' : (isCertsBook ? '#00ffff' : undefined)))}
+            hoverLabel={isCertsBook ? '≡ CERTIFICADOS · clic para abrir' : undefined}
             screenTransform={item.screen}
           />
         )
