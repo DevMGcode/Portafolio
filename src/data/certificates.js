@@ -22,12 +22,6 @@ export const CERTIFICATES = [
     image: '/certificados/excel-power-pivot-me.webp',
   },
   {
-    date: '2026-07', title: 'IA Aplicada: resuelve retos reales con Claude',
-    issuer: 'Smart4AI · rutaN', tags: ['IA', 'Claude', 'Bootcamp'],
-    image: '/certificados/certificado-bootcamp-ia-aplicada-con-claude.webp',
-    url: 'https://smart4ai.io/certificadosbootcampclaude',
-  },
-  {
     date: '2026-07', title: 'Dashboards Profesionales con Excel',
     issuer: 'DAXUS LATAM', tags: ['Excel', 'Dashboards'],
     image: '/certificados/dashboards-profesionales-con-excel-me.webp',
