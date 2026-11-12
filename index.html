@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirigiendo… · Melissa García</title>
+
+    <!-- Redirección inmediata por JS (la más rápida) -->
+    <script>
+      window.location.replace('https://melissa-garcia.netlify.app/');
+    </script>
+
+    <!-- Fallback: meta refresh por si el JS está deshabilitado -->
+    <meta http-equiv="refresh" content="0; url=https://melissa-garcia.netlify.app/" />
+
+    <!-- SEO: dile a los buscadores cuál es la URL canónica -->
+    <link rel="canonical" href="https://melissa-garcia.netlify.app/" />
+
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        background: radial-gradient(130% 90% at 50% 0%, #0d1430 0%, #0a0e1f 45%, #05060f 100%);
+        color: #e8f4ff;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        text-align: center;
+        padding: 24px;
+      }
+      .logo {
+        font-family: 'Consolas', monospace;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 3px;
+      }
+      .brk { color: #ff44aa; }
+      .logo-txt {
+        background: linear-gradient(90deg, #00ddff, #ff44aa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .spinner {
+        width: 46px;
+        height: 46px;
+        border: 3px solid rgba(0, 221, 255, 0.15);
+        border-top-color: #00ddff;
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      p { font-size: 15px; color: rgba(160, 190, 225, 0.9); }
+      a {
+        color: #00ddff;
+        font-weight: 700;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 221, 255, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <span class="brk">[</span><span class="logo-txt">DEVOFFICE_3D</span><span class="brk">]</span>
+    </div>
+    <div class="spinner"></div>
+    <p>Este portafolio se mudó. Redirigiendo…</p>
+    <p>
+      Si no ocurre automáticamente,
+      <a href="https://melissa-garcia.netlify.app/">entra aquí →</a>
+    </p>
+  </body>
+</html>
