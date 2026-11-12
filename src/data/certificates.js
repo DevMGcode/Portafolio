@@ -6,6 +6,16 @@
 export const CERTIFICATES = [
   // ─────────── 2026 ───────────
   {
+    date: '2026-11', title: 'Fundamentos de Power BI',
+    issuer: 'DAXUS LATAM', tags: ['Power BI', 'Datos'],
+    image: '/certificados/fundamentos-de-power-bi.webp',
+  },
+  {
+    date: '2026-11', title: 'Motivar y Desarrollar Personas',
+    issuer: 'DAXUS LATAM', tags: ['Soft skills', 'Liderazgo'],
+    image: '/certificados/motivar-y-desarrollar-personas.webp',
+  },
+  {
     date: '2026-09', title: 'Excel Avanzado: Visual Basic for Application (VBA)',
     issuer: 'DAXUS LATAM', tags: ['Excel', 'VBA', 'Macros'],
     image: '/certificados/vba-me.webp',
