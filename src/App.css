@@ -2294,6 +2294,65 @@ canvas { display: block; }
   padding: 0 12px 0 8px;
 }
 
+/* ── Deck de música: navegación de pistas + volumen ── */
+.music-deck {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px 0 9px;
+}
+.music-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(0, 255, 136, 0.28);
+  border-radius: 6px;
+  background: rgba(0, 255, 136, 0.06);
+  color: #9effd0;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.12s;
+  flex-shrink: 0;
+}
+.music-nav:hover {
+  background: rgba(0, 255, 136, 0.18);
+  border-color: rgba(0, 255, 136, 0.6);
+  color: #eafff4;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+.music-nav:active { transform: scale(0.9); }
+
+.music-track {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: 'Consolas', monospace;
+  letter-spacing: 0.5px;
+  user-select: none;
+  min-width: 26px;
+  justify-content: center;
+}
+.music-track-n {
+  font-size: 12px;
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 7px rgba(0, 255, 136, 0.6);
+}
+.music-track-total {
+  font-size: 9px;
+  color: rgba(0, 255, 136, 0.5);
+}
+
+.music-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(0, 255, 136, 0.2);
+  flex-shrink: 0;
+  margin: 0 1px;
+}
+
 .volume-icon {
   font-size: 9px;
   color: #00ff88;

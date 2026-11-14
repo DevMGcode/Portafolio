@@ -20,6 +20,15 @@ import './App.css'
 const STORAGE_KEY = 'devoffice-3d-layout-v2'
 const DELETED_KEY = 'devoffice-3d-deleted-v2'
 
+// Playlist de música ambiente. Empieza en la pista 0 (la actual) y al terminar
+// una, salta sola a la siguiente (loop de toda la lista). Nombres genéricos en UI.
+const MUSIC_TRACKS = [
+  '/boosted.mp3',
+  '/music/pista-2.mp3',
+  '/music/pista-3.mp3',
+  '/music/pista-4.mp3',
+]
+
 function loadDeletedSet() {
   try {
     const raw = localStorage.getItem(DELETED_KEY)
@@ -87,11 +96,10 @@ export default function App() {
   const [savedFlash, setSavedFlash] = useState(false)
   const [musicState, setMusicState] = useState('loading')
   const [volume, setVolume] = useState(0.18)
+  const [trackIndex, setTrackIndex] = useState(0)
   const flashTimer = useRef(null)
-  const audioContextRef = useRef(null)
-  const audioBufferRef = useRef(null)
-  const gainNodeRef = useRef(null)
-  const sourceRef = useRef(null)
+  const audioRef = useRef(null)
+  const trackIndexRef = useRef(0)
   const musicStartedRef = useRef(false)
   const startMusicRef = useRef(() => {})
 
@@ -110,90 +118,83 @@ export default function App() {
   }, [layout, editingAllowed])
 
   useEffect(() => {
-    const audio = new Audio(assetPath('/boosted.mp3'))
+    const audio = new Audio(assetPath(MUSIC_TRACKS[0]))
     audio.preload = 'auto'
+    audio.volume = 0.18
+    audioRef.current = audio
 
-    const context = new AudioContext()
-    audioContextRef.current = context
-    gainNodeRef.current = context.createGain()
-    gainNodeRef.current.gain.value = 0.18
-    gainNodeRef.current.connect(context.destination)
-
-    let cancelled = false
-
-    const loadAudio = async () => {
-      try {
-        const response = await fetch(audio.src)
-        const arrayBuffer = await response.arrayBuffer()
-        const decoded = await context.decodeAudioData(arrayBuffer)
-        if (cancelled) return
-        audioBufferRef.current = decoded
-        setMusicState('ready')
-      } catch (error) {
-        console.warn('No se pudo cargar la música de fondo', error)
-        setMusicState('error')
-      }
+    const onCanPlay = () => setMusicState((s) => (s === 'playing' ? s : 'ready'))
+    const onError = () => setMusicState('error')
+    // Al terminar una pista → salta sola a la siguiente (loop de la playlist)
+    const onEnded = () => {
+      const next = (trackIndexRef.current + 1) % MUSIC_TRACKS.length
+      trackIndexRef.current = next
+      setTrackIndex(next)
+      audio.src = assetPath(MUSIC_TRACKS[next])
+      audio.play().then(() => setMusicState('playing')).catch(() => {})
     }
+    audio.addEventListener('canplay', onCanPlay)
+    audio.addEventListener('error', onError)
+    audio.addEventListener('ended', onEnded)
 
     const startMusic = async () => {
-      if (musicStartedRef.current || !audioBufferRef.current || !audioContextRef.current || !gainNodeRef.current) return
-
+      if (musicStartedRef.current) return
       try {
-        if (audioContextRef.current.state !== 'running') {
-          await audioContextRef.current.resume()
-        }
-
-        const source = audioContextRef.current.createBufferSource()
-        source.buffer = audioBufferRef.current
-        source.loop = true
-        source.connect(gainNodeRef.current)
-        source.start(0)
-
-        sourceRef.current = source
+        await audio.play()
         musicStartedRef.current = true
         setMusicState('playing')
-      } catch (error) {
-        console.warn('No se pudo iniciar la música de fondo', error)
-        setMusicState('ready')
+      } catch {
+        // Necesita gesto del usuario; se reintenta con el primer click/tecla
       }
     }
-
     startMusicRef.current = startMusic
-    loadAudio()
 
-    const unlockAndStart = () => {
-      void startMusicRef.current()
-    }
-
+    const unlockAndStart = () => { void startMusicRef.current() }
     window.addEventListener('pointerdown', unlockAndStart, { passive: true, once: true })
     window.addEventListener('keydown', unlockAndStart, { once: true })
 
     return () => {
-      cancelled = true
       window.removeEventListener('pointerdown', unlockAndStart)
       window.removeEventListener('keydown', unlockAndStart)
-      if (sourceRef.current) {
-        try { sourceRef.current.stop() } catch {}
-        sourceRef.current.disconnect()
-      }
-      if (gainNodeRef.current) {
-        try { gainNodeRef.current.disconnect() } catch {}
-      }
-      if (audioContextRef.current) {
-        void audioContextRef.current.close()
-      }
+      audio.removeEventListener('canplay', onCanPlay)
+      audio.removeEventListener('error', onError)
+      audio.removeEventListener('ended', onEnded)
+      try { audio.pause() } catch {}
+      audio.src = ''
     }
   }, [])
 
+  // Play / pausa (el botón ♪)
   const handleMusicToggle = useCallback(() => {
-    if (musicState === 'error') return
-    void startMusicRef.current()
+    const audio = audioRef.current
+    if (!audio || musicState === 'error' || musicState === 'loading') return
+    if (audio.paused) {
+      audio.play().then(() => { musicStartedRef.current = true; setMusicState('playing') }).catch(() => {})
+    } else {
+      audio.pause()
+      setMusicState('ready')
+    }
+  }, [musicState])
+
+  // Cambiar de pista (⏮ ⏭). dir = -1 anterior, +1 siguiente. Loop circular.
+  const handleTrackChange = useCallback((dir) => {
+    const audio = audioRef.current
+    if (!audio || musicState === 'error' || musicState === 'loading') return
+    const n = (trackIndexRef.current + dir + MUSIC_TRACKS.length) % MUSIC_TRACKS.length
+    trackIndexRef.current = n
+    setTrackIndex(n)
+    const wasPlaying = !audio.paused
+    audio.src = assetPath(MUSIC_TRACKS[n])
+    audio.load()
+    if (wasPlaying) {
+      audio.play().then(() => { musicStartedRef.current = true; setMusicState('playing') }).catch(() => {})
+    }
   }, [musicState])
 
   const handleVolumeChange = useCallback((e) => {
     const v = parseFloat(e.target.value)
     setVolume(v)
-    if (gainNodeRef.current) gainNodeRef.current.gain.value = v
+    if (audioRef.current) audioRef.current.volume = v
   }, [])
 
   const handleUpdateLayout = useCallback((name, changes) => {
@@ -324,14 +325,31 @@ export default function App() {
           <button
             className={`pill pill-music ${musicState === 'playing' ? 'pill-music-on' : ''}`}
             onClick={handleMusicToggle}
-            disabled={musicState === 'error'}
-            title={musicState === 'playing' ? 'Música activada' : 'Activar música ambiente'}
+            disabled={musicState === 'error' || musicState === 'loading'}
+            title={musicState === 'playing' ? 'Pausar música' : 'Reproducir música'}
           >
             <span className="pill-icon">♪</span>
-            {musicState === 'playing' ? 'ON' : musicState === 'ready' ? 'Música' : musicState === 'error' ? 'No disp.' : '...'}
+            {musicState === 'playing' ? 'ON' : musicState === 'error' ? 'No disp.' : musicState === 'loading' ? '...' : 'OFF'}
           </button>
-          {musicState === 'playing' && (
-            <div className="volume-slider-wrap">
+          {(musicState === 'playing' || musicState === 'ready') && (
+            <div className="music-deck">
+              <button
+                className="music-nav"
+                onClick={() => handleTrackChange(-1)}
+                title="Pista anterior"
+                aria-label="Pista anterior"
+              >⏮</button>
+              <span className="music-track" title={`Pista ${trackIndex + 1} de ${MUSIC_TRACKS.length}`}>
+                <span className="music-track-n">{trackIndex + 1}</span>
+                <span className="music-track-total">/{MUSIC_TRACKS.length}</span>
+              </span>
+              <button
+                className="music-nav"
+                onClick={() => handleTrackChange(1)}
+                title="Siguiente pista"
+                aria-label="Siguiente pista"
+              >⏭</button>
+              <span className="music-divider" />
               <span className="volume-icon">▮</span>
               <input
                 type="range"
